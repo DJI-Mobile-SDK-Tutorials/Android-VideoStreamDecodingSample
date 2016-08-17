@@ -1,0 +1,1 @@
+android-videostreamdecodingsample/jni/libffmpeg.so filter=lfs diff=lfs merge=lfs -text
