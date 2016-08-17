@@ -1,0 +1,65 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .DS_Store
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => dJISDKLIB/src/main/AndroidManifest.xml
+* libs/arm64-v8a/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libFlyForbid.so
+* libs/arm64-v8a/libGroudStation.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libGroudStation.so
+* libs/arm64-v8a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libSDKRelativeJNI.so
+* libs/arm64-v8a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libUpgradeVerify.so
+* libs/arm64-v8a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libdjivideo.so
+* libs/arm64-v8a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libstlport_shared.so
+* libs/arm64-v8a/libudt.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudt.so
+* libs/arm64-v8a/libudtjni.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudtjni.so
+* libs/arm64-v8a/libyuv2.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libyuv2.so
+* libs/armeabi-v7a/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libFlyForbid.so
+* libs/armeabi-v7a/libGroudStation.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libGroudStation.so
+* libs/armeabi-v7a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libSDKRelativeJNI.so
+* libs/armeabi-v7a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libUpgradeVerify.so
+* libs/armeabi-v7a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libdjivideo.so
+* libs/armeabi-v7a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libstlport_shared.so
+* libs/armeabi-v7a/libudt.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudt.so
+* libs/armeabi-v7a/libudtjni.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudtjni.so
+* libs/armeabi-v7a/libyuv2.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libyuv2.so
+* libs/bouncycastle.jar => dJISDKLIB/libs/bouncycastle.jar
+* libs/dji-sdk.jar => dJISDKLIB/libs/dji-sdk.jar
+* libs/dji_eventbus.jar => dJISDKLIB/libs/dji_eventbus.jar
+* libs/dji_gson.jar => dJISDKLIB/libs/dji_gson.jar
+* libs/x86/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/x86/libFlyForbid.so
+* libs/x86/libGroudStation.so => dJISDKLIB/src/main/jniLibs/x86/libGroudStation.so
+* libs/x86/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/x86/libSDKRelativeJNI.so
+* libs/x86/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/x86/libUpgradeVerify.so
+* libs/x86/libdjivideo.so => dJISDKLIB/src/main/jniLibs/x86/libdjivideo.so
+* libs/x86/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/x86/libstlport_shared.so
+* libs/x86/libudt.so => dJISDKLIB/src/main/jniLibs/x86/libudt.so
+* libs/x86/libudtjni.so => dJISDKLIB/src/main/jniLibs/x86/libudtjni.so
+* libs/x86/libyuv2.so => dJISDKLIB/src/main/jniLibs/x86/libyuv2.so
+* res/ => dJISDKLIB/src/main/res/
+* src/ => dJISDKLIB/src/main/java
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

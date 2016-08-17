@@ -1,0 +1,14 @@
+prefix=../djifflib
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 56.13.100
+Requires: libswresample >= 1.1.100, libavutil >= 54.15.100
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavcodec -lm -pthread -lgcc
+Libs.private: 
+Cflags: -I${includedir}

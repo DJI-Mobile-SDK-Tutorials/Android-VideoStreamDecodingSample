@@ -1,0 +1,14 @@
+prefix=../djifflib
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libavformat
+Description: FFmpeg container format library
+Version: 56.15.102
+Requires: libavcodec >= 56.13.100, libswresample >= 1.1.100, libavutil >= 54.15.100
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavformat -lm -pthread -lgcc
+Libs.private: 
+Cflags: -I${includedir}
