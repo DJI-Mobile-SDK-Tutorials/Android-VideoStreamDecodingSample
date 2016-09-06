@@ -1,3 +1,5 @@
+> Note: This sample code will be updated to Android SDK 3.3 soon.
+
 # Android-VideoStreamDecodingSample
 
 ## Introduction
