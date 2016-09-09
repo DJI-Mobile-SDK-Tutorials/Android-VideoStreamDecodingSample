@@ -32,9 +32,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import dji.sdk.AirLink.DJILBAirLink;
-import dji.sdk.Camera.DJICamera;
-import dji.sdk.Codec.DJICodecManager;
+import dji.common.product.Model;
+import dji.sdk.airlink.DJILBAirLink;
+import dji.sdk.camera.DJICamera;
+import dji.sdk.codec.DJICodecManager;
 import dji.sdk.base.DJIBaseProduct;
 
 public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuvDataListener {
@@ -199,7 +200,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             mCamera = null;
             showToast("Disconnected");
         } else {
-            if (!mProduct.getModel().equals(DJIBaseProduct.Model.UnknownAircraft)) {
+            if (!mProduct.getModel().equals(Model.UnknownAircraft)) {
                 mCamera = mProduct.getCamera();
                 if (mCamera != null) {
                     mCamera.setDJICameraReceivedVideoDataCallback(mReceivedVideoDataCallBack);

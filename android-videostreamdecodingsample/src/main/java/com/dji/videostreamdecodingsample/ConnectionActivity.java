@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import dji.sdk.Products.DJIAircraft;
+import dji.sdk.products.DJIAircraft;
 import dji.sdk.base.DJIBaseProduct;
 
 public class ConnectionActivity extends Activity implements View.OnClickListener, DJIBaseProduct.DJIVersionCallback {
@@ -109,7 +109,7 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
 
         if(!ret) {
             // The product or the remote controller are not connected.
-            showToast("Disconnected");
+//            showToast("Disconnected");
         }
     }
 

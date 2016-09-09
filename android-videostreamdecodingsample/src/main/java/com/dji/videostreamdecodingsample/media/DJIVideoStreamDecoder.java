@@ -19,7 +19,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import dji.sdk.SDKManager.DJISDKManager;
+import dji.common.product.Model;
+import dji.sdk.sdkmanager.DJISDKManager;
 import dji.sdk.base.DJIBaseProduct;
 
 /**
@@ -214,7 +215,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * @param width Width of current video stream.
      * @return Resource ID of the IDR frame
      */
-    public int getIframeRawId(DJIBaseProduct.Model pModel, int width) {
+    public int getIframeRawId(Model pModel, int width) {
         int iframeId = dji.midware.R.raw.iframe_1280x720_ins;
 
         switch(pModel) {

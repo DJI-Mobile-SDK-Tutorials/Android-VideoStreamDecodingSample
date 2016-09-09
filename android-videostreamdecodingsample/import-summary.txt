@@ -1,13 +1,29 @@
 ECLIPSE ANDROID PROJECT IMPORT SUMMARY
 ======================================
 
-Ignored Files:
---------------
-The following files were *not* copied into the new Gradle project; you
-should evaluate whether these are still needed in your project and if
-so manually move them:
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
 
-* .DS_Store
+gson-2.6.2.jar => com.google.code.gson:gson:2.6.2
+
+Potentially Missing Dependency:
+-------------------------------
+When we replaced the following .jar files with a Gradle dependency, we
+inferred the dependency version number from the filename. This
+specific version may not actually be available from the repository.
+If you get a build error stating that the dependency is missing, edit
+the version number to for example "+" to pick up the latest version
+instead. (This may require you to update your code if the library APIs
+have changed.)
+
+gson-2.6.2.jar => version 2.6.2 in com.google.code.gson:gson:2.6.2
 
 Moved Files:
 ------------
@@ -15,15 +31,7 @@ Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
 * AndroidManifest.xml => dJISDKLIB/src/main/AndroidManifest.xml
-* libs/arm64-v8a/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libFlyForbid.so
-* libs/arm64-v8a/libGroudStation.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libGroudStation.so
-* libs/arm64-v8a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libSDKRelativeJNI.so
-* libs/arm64-v8a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libUpgradeVerify.so
-* libs/arm64-v8a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libdjivideo.so
-* libs/arm64-v8a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libstlport_shared.so
-* libs/arm64-v8a/libudt.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudt.so
-* libs/arm64-v8a/libudtjni.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudtjni.so
-* libs/arm64-v8a/libyuv2.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libyuv2.so
+* assets/ => dJISDKLIB/src/main/assets/
 * libs/armeabi-v7a/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libFlyForbid.so
 * libs/armeabi-v7a/libGroudStation.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libGroudStation.so
 * libs/armeabi-v7a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libSDKRelativeJNI.so
@@ -33,21 +41,17 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/armeabi-v7a/libudt.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudt.so
 * libs/armeabi-v7a/libudtjni.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudtjni.so
 * libs/armeabi-v7a/libyuv2.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libyuv2.so
-* libs/bouncycastle.jar => dJISDKLIB/libs/bouncycastle.jar
+* libs/converter-gson-2.0.1.jar => dJISDKLIB/libs/converter-gson-2.0.1.jar
 * libs/dji-sdk.jar => dJISDKLIB/libs/dji-sdk.jar
 * libs/dji_eventbus.jar => dJISDKLIB/libs/dji_eventbus.jar
 * libs/dji_gson.jar => dJISDKLIB/libs/dji_gson.jar
-* libs/x86/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/x86/libFlyForbid.so
-* libs/x86/libGroudStation.so => dJISDKLIB/src/main/jniLibs/x86/libGroudStation.so
-* libs/x86/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/x86/libSDKRelativeJNI.so
-* libs/x86/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/x86/libUpgradeVerify.so
-* libs/x86/libdjivideo.so => dJISDKLIB/src/main/jniLibs/x86/libdjivideo.so
-* libs/x86/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/x86/libstlport_shared.so
-* libs/x86/libudt.so => dJISDKLIB/src/main/jniLibs/x86/libudt.so
-* libs/x86/libudtjni.so => dJISDKLIB/src/main/jniLibs/x86/libudtjni.so
-* libs/x86/libyuv2.so => dJISDKLIB/src/main/jniLibs/x86/libyuv2.so
+* libs/okhttp-3.2.0.jar => dJISDKLIB/libs/okhttp-3.2.0.jar
+* libs/okio-1.7.0.jar => dJISDKLIB/libs/okio-1.7.0.jar
+* libs/retrofit-2.0.1.jar => dJISDKLIB/libs/retrofit-2.0.1.jar
+* libs/rxandroid-1.1.0.jar => dJISDKLIB/libs/rxandroid-1.1.0.jar
+* libs/rxjava-1.1.2.jar => dJISDKLIB/libs/rxjava-1.1.2.jar
+* libs/sqlbrite-0.6.2.jar => dJISDKLIB/libs/sqlbrite-0.6.2.jar
 * res/ => dJISDKLIB/src/main/res/
-* src/ => dJISDKLIB/src/main/java
 
 Next Steps:
 -----------

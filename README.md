@@ -1,5 +1,3 @@
-> Note: This sample code will be updated to Android SDK 3.3 soon.
-
 # Android-VideoStreamDecodingSample
 
 ## Introduction
@@ -10,7 +8,7 @@ This sample code demonstrates how to use [FFmpeg](https://ffmpeg.org) for video 
 
  - Android Studio 2.0+
  - Android System 4.2+
- - DJI Android SDK 3.2.1
+ - DJI Android SDK 3.3
 
 ## Explanation
 
