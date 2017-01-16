@@ -12,6 +12,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 
+import dji.common.product.Model;
+import dji.sdk.sdkmanager.DJISDKManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -19,9 +21,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import dji.common.product.Model;
-import dji.sdk.sdkmanager.DJISDKManager;
 import dji.sdk.base.DJIBaseProduct;
+
+import static dji.common.product.Model.Osmo;
+import static dji.common.product.Model.Osmo_Pro;
+import static dji.common.product.Model.Phantom_3_4K;
+import static dji.common.product.Model.Phantom_3_Advanced;
+import static dji.common.product.Model.Phantom_3_Standard;
+import static dji.common.product.Model.Phantom_4;
 
 /**
  * This class is a helper class for hardware decoding. Please follow the following steps to use it:
@@ -51,6 +58,8 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     private static final int MSG_CHANGE_SURFACE = 3;
     private static final int CODEC_DEQUEUE_INPUT_QUEUE_RETRY = 20;
     public static final String VIDEO_ENCODING_FORMAT = "video/avc";
+    private static HandlerThread  handlerThreadNew = new HandlerThread("native parser thread");
+    private static Handler handlerNew;
 
     private final boolean DEBUG = false;
 
@@ -173,7 +182,17 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
         callbackHandlerThread = new HandlerThread("callback handler");
         callbackHandlerThread.start();
         callbackHandler = new Handler(callbackHandlerThread.getLooper());
+        handlerThreadNew.start();
+        handlerNew = new Handler(handlerThreadNew.getLooper(), new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                byte[] buf = (byte[])msg.obj;
+                NativeHelper.getInstance().parse(buf, msg.arg1);
+                return false;
+            }
+        });
     }
+
 
     public static DJIVideoStreamDecoder getInstance() {
         if (instance == null) {
@@ -192,7 +211,6 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     public void init(Context context, Surface surface) {
         this.context = context;
         this.surface = surface;
-        NativeHelper.getInstance().init();
         NativeHelper.getInstance().setDataListener(this);
         if (dataHandler != null) {
             dataHandler.sendEmptyMessage(MSG_INIT_CODEC);
@@ -206,7 +224,11 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      */
     public void parse(byte[] buf, int size) {
         logd( "parse data size: " + size);
-        NativeHelper.getInstance().parse(buf, size);
+        Message message =handlerNew.obtainMessage();
+        message.obj = buf;
+        message.arg1 = size;
+        handlerNew.sendMessage(message);
+
     }
 
     /**
@@ -299,6 +321,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
         if (codec != null) {
             releaseCodec();
         }
+        loge("initVideoDecoder----------------------------------------------------------");
         loge("initVideoDecoder video width = " + width + "  height = " + height);
         // create the media format
         MediaFormat format = MediaFormat.createVideoFormat(VIDEO_ENCODING_FORMAT, width, height);
@@ -648,7 +671,6 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     }
 
     public void destroy() {
-        NativeHelper.getInstance().release();
     }
 
     @Override

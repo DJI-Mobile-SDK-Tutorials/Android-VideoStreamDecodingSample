@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 16
@@ -18,7 +18,7 @@ android {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile files('libs/gson-2.6.2.jar')
     compile files('libs/converter-gson-2.0.1.jar')
     compile files('libs/dji-sdk.jar')
     compile files('libs/dji_eventbus.jar')
@@ -28,5 +28,6 @@ dependencies {
     compile files('libs/retrofit-2.0.1.jar')
     compile files('libs/rxandroid-1.1.0.jar')
     compile files('libs/rxjava-1.1.2.jar')
+    compile files('libs/rxjava-computation-expressions-0.21.1.jar')
     compile files('libs/sqlbrite-0.6.2.jar')
 }

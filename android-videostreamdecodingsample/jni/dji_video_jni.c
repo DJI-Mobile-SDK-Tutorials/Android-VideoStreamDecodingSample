@@ -70,19 +70,16 @@ JNIEXPORT jboolean Java_com_dji_videostreamdecodingsample_media_NativeHelper_ini
 {
 	jclass clazz = (*env)->GetObjectClass(env, obj);
 	dataCallbackMID = (*env)->GetMethodID(env, clazz, "onFrameDataRecv", "([BIIZII)V");
-
-	if (isFFmpegInitialized == 0) 
+	if (isFFmpegInitialized == 0)
 	{
 		avcodec_register_all();
 		av_register_all();
 		isFFmpegInitialized = 1;
 	}
-
 	m_pAVCodec = avcodec_find_decoder(AV_CODEC_ID_H264);
 	m_pCodecCtx = avcodec_alloc_context3(m_pAVCodec);
 	m_pCodecPaser = av_parser_init(AV_CODEC_ID_H264);
-
-	if (m_pAVCodec == NULL || m_pCodecCtx == NULL) 
+	if (m_pAVCodec == NULL || m_pCodecCtx == NULL)
 	{
 		LOGD("m_pAVCodec == NULL||m_pCodecCtx == NULL");
 		return 0;
@@ -125,8 +122,11 @@ int parse(JNIEnv *env, jobject obj, uint8_t* pBuff, int videosize, uint64_t pts)
 	{
 		AVPacket packet;
 		av_init_packet(&packet);
-
-		paserLen = av_parser_parse2(m_pCodecPaser, m_pCodecCtx, &packet.data, &packet.size, pFrameBuff,
+		if (m_pCodecPaser == NULL) {
+			LOGE("m_pCodecPaser == NULL");
+			Java_com_dji_videostreamdecodingsample_media_NativeHelper_init(env, obj);
+		}
+ 		paserLen = av_parser_parse2(m_pCodecPaser, m_pCodecCtx, &packet.data, &packet.size, pFrameBuff,
 				paserLength_In, AV_NOPTS_VALUE, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
 
 		//LOGD("paserLen = %d",paserLen);
