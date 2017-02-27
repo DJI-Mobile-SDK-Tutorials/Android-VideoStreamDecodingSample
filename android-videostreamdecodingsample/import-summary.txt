@@ -32,6 +32,7 @@ Eclipse projects. Here's how the projects were restructured:
 
 * AndroidManifest.xml => dJISDKLIB/src/main/AndroidManifest.xml
 * assets/ => dJISDKLIB/src/main/assets/
+* libs/Java-WebSocket-1.3.0.jar => dJISDKLIB/libs/Java-WebSocket-1.3.0.jar
 * libs/arm64-v8a/libFREncrypt.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libFREncrypt.so
 * libs/arm64-v8a/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libFlyForbid.so
 * libs/arm64-v8a/libGroudStation.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libGroudStation.so
@@ -74,6 +75,7 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/x86/libudtjni.so => dJISDKLIB/src/main/jniLibs/x86/libudtjni.so
 * libs/x86/libyuv2.so => dJISDKLIB/src/main/jniLibs/x86/libyuv2.so
 * res/ => dJISDKLIB/src/main/res/
+* arrow_v02.3DS => arrow_v02.3ds
 
 Next Steps:
 -----------

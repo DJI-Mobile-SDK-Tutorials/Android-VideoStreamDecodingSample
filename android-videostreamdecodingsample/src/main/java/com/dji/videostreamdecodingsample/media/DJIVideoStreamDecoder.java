@@ -15,6 +15,7 @@ import android.view.Surface;
 import dji.common.product.Model;
 import dji.log.DJILog;
 import dji.midware.data.model.P3.DataCameraGetPushStateInfo;
+import dji.sdk.base.BaseProduct;
 import dji.sdk.sdkmanager.DJISDKManager;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,15 +23,6 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
-
-import dji.sdk.base.DJIBaseProduct;
-
-import static dji.common.product.Model.Osmo;
-import static dji.common.product.Model.Osmo_Pro;
-import static dji.common.product.Model.Phantom_3_4K;
-import static dji.common.product.Model.Phantom_3_Advanced;
-import static dji.common.product.Model.Phantom_3_Standard;
-import static dji.common.product.Model.Phantom_4;
 
 /**
  * This class is a helper class for hardware decoding. Please follow the following steps to use it:
@@ -358,7 +350,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * @throws IOException
      */
     private byte[] getDefaultKeyFrame(int width) throws IOException {
-        DJIBaseProduct product = DJISDKManager.getInstance().getDJIProduct();
+        BaseProduct product = DJISDKManager.getInstance().getProduct();
         if (product == null || product.getModel() == null) {
             return null;
         }

@@ -27,8 +27,9 @@ import com.dji.videostreamdecodingsample.media.DJIVideoStreamDecoder;
 import com.dji.videostreamdecodingsample.media.NativeHelper;
 import dji.common.product.Model;
 import dji.sdk.airlink.DJILBAirLink;
-import dji.sdk.camera.DJICamera;
+import dji.sdk.base.BaseProduct;
 import dji.sdk.codec.DJICodecManager;
+import dji.sdk.camera.Camera;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,8 +37,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import dji.sdk.base.DJIBaseProduct;
 
 public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuvDataListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -50,8 +49,8 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     private SurfaceView videostreamPreviewSf;
     private SurfaceHolder videostreamPreviewSh;
 
-    private DJIBaseProduct mProduct;
-    private DJICamera mCamera;
+    private BaseProduct mProduct;
+    private Camera mCamera;
     private DJICodecManager mCodecManager;
 
     private TextView savePath;
@@ -61,7 +60,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     private HandlerThread backgroundHandlerThread;
     public Handler backgroundHandler;
 
-    protected DJICamera.CameraReceivedVideoDataCallback mReceivedVideoDataCallBack = null;
+    protected Camera.VideoDataCallback mReceivedVideoDataCallBack = null;
     protected DJILBAirLink.DJIOnReceivedVideoCallback mOnReceivedVideoCallback = null;
 
     @Override
@@ -76,7 +75,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     @Override
     protected void onPause() {
         if (mCamera != null) {
-            mCamera.setDJICameraReceivedVideoDataCallback(null);
+            mCamera.setVideoDataCallback(null);
         }
         if (useSurface) {
             DJIVideoStreamDecoder.getInstance().stop();
@@ -203,15 +202,15 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             updateTitle("Disconnected");
         }
 
-        mReceivedVideoDataCallBack = new DJICamera.CameraReceivedVideoDataCallback() {
+        mReceivedVideoDataCallBack = new Camera.VideoDataCallback() {
 
             @Override
-            public void onResult(byte[] videoBuffer, int size) {
+            public void onReceive(byte[] bytes, int size) {
                 Log.d(TAG, "camera recv video data size: " + size);
                 if (useSurface) {
-                    DJIVideoStreamDecoder.getInstance().parse(videoBuffer, size);
+                    DJIVideoStreamDecoder.getInstance().parse(bytes, size);
                 } else if (mCodecManager != null) {
-                    mCodecManager.sendDataToDecoder(videoBuffer, size);
+                    mCodecManager.sendDataToDecoder(bytes, size);
                 }
             }
         };
@@ -233,7 +232,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             if (!mProduct.getModel().equals(Model.UnknownAircraft)) {
                 mCamera = mProduct.getCamera();
                 if (mCamera != null) {
-                    mCamera.setDJICameraReceivedVideoDataCallback(mReceivedVideoDataCallBack);
+                    mCamera.setVideoDataCallback(mReceivedVideoDataCallBack);
                 }
             } else {
                 if (null != mProduct.getAirLink()) {
