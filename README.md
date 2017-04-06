@@ -1,7 +1,5 @@
 # Android-VideoStreamDecodingSample
 
-> **Note: This Sample Project is developed based on Android SDK v3.5.1, an update version for Android SDK v4.0 will be published soon.**
-
 ## Introduction
 
 This sample code demonstrates how to use [FFmpeg](https://ffmpeg.org) for video frame parsing and to use the `MediaCodec` for hardware decoding. It will help to parse video frames and decode the raw video stream data from DJI Camera and output the [YUV](https://en.wikipedia.org/wiki/YUV) data. 
@@ -10,7 +8,7 @@ This sample code demonstrates how to use [FFmpeg](https://ffmpeg.org) for video 
 
  - Android Studio 2.0+
  - Android System 4.2+
- - DJI Android SDK 3.5.1
+ - DJI Android SDK 4.0
 
 ## IMPORTANT: Install `git lfs`
 
