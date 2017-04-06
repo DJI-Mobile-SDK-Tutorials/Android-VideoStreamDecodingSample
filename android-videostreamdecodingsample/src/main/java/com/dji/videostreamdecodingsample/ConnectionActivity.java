@@ -12,10 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import dji.sdk.base.DJIBaseProduct;
-import dji.sdk.products.DJIAircraft;
+import dji.sdk.base.BaseProduct;
+import dji.sdk.products.Aircraft;
 
-public class ConnectionActivity extends Activity implements View.OnClickListener, DJIBaseProduct.DJIVersionCallback {
+
+public class ConnectionActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -89,15 +90,15 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
 
     private void updateTitleBar() {
         boolean ret = false;
-        DJIBaseProduct product = VideoDecodingApplication.getProductInstance();
+        BaseProduct product = VideoDecodingApplication.getProductInstance();
         if (product != null) {
             if(product.isConnected()) {
                 //The product is connected
                 showToast(VideoDecodingApplication.getProductInstance().getModel() + " Connected");
                 ret = true;
             } else {
-                if(product instanceof DJIAircraft) {
-                    DJIAircraft aircraft = (DJIAircraft)product;
+                if(product instanceof Aircraft) {
+                    Aircraft aircraft = (Aircraft)product;
                     if(aircraft.getRemoteController() != null && aircraft.getRemoteController().isConnected()) {
                         // The product is not connected, but the remote controller is connected
                         showToast("only RC Connected");
@@ -135,11 +136,6 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
     }
 
     @Override
-    public void onProductVersionChange(String oldVersion, String newVersion) {
-        updateVersion();
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -155,16 +151,15 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
 
     private void refreshSDKRelativeUI() {
 
-        DJIBaseProduct mProduct = VideoDecodingApplication.getProductInstance();
+        BaseProduct mProduct = VideoDecodingApplication.getProductInstance();
         Log.v(TAG, "refreshSDKRelativeUI");
 
         if (null != mProduct && mProduct.isConnected()) {
             Log.v(TAG, "refreshSDK: True");
             mBtnOpen.setEnabled(true);
 
-            String str = mProduct instanceof DJIAircraft ? "DJIAircraft" : "DJIHandHeld";
+            String str = mProduct instanceof Aircraft ? "DJIAircraft" : "DJIHandHeld";
             mTextConnectionStatus.setText("Status: " + str + " connected");
-            mProduct.setDJIVersionCallback(this);
             updateVersion();
 
             if (null != mProduct.getModel()) {
