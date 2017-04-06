@@ -26,8 +26,8 @@ import com.dji.videostreamdecodingsample.media.DJIVideoStreamDecoder;
 
 import com.dji.videostreamdecodingsample.media.NativeHelper;
 import dji.common.product.Model;
-import dji.sdk.airlink.DJILBAirLink;
 import dji.sdk.base.BaseProduct;
+import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.camera.Camera;
 import java.io.File;
@@ -60,8 +60,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     private HandlerThread backgroundHandlerThread;
     public Handler backgroundHandler;
 
-    protected Camera.VideoDataCallback mReceivedVideoDataCallBack = null;
-    protected DJILBAirLink.DJIOnReceivedVideoCallback mOnReceivedVideoCallback = null;
+    protected VideoFeeder.VideoDataCallback mReceivedVideoDataCallBack = null;
 
     @Override
     protected void onResume() {
@@ -75,7 +74,10 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     @Override
     protected void onPause() {
         if (mCamera != null) {
-            mCamera.setVideoDataCallback(null);
+            if (VideoFeeder.getInstance().getVideoFeeds() != null
+                    && VideoFeeder.getInstance().getVideoFeeds().size() > 0) {
+                VideoFeeder.getInstance().getVideoFeeds().get(0).setCallback(null);
+            }
         }
         if (useSurface) {
             DJIVideoStreamDecoder.getInstance().stop();
@@ -125,6 +127,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
 
         initUi();
         initPreviewer();
+
     }
 
     public Handler mainHandler = new Handler(Looper.getMainLooper()) {
@@ -202,26 +205,19 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             updateTitle("Disconnected");
         }
 
-        mReceivedVideoDataCallBack = new Camera.VideoDataCallback() {
+        // The callback for receiving the raw H264 video data for camera live view
+        mReceivedVideoDataCallBack = new VideoFeeder.VideoDataCallback() {
 
             @Override
-            public void onReceive(byte[] bytes, int size) {
+            public void onReceive(byte[] videoBuffer, int size) {
+
                 Log.d(TAG, "camera recv video data size: " + size);
                 if (useSurface) {
-                    DJIVideoStreamDecoder.getInstance().parse(bytes, size);
-                } else if (mCodecManager != null) {
-                    mCodecManager.sendDataToDecoder(bytes, size);
-                }
-            }
-        };
-        mOnReceivedVideoCallback = new DJILBAirLink.DJIOnReceivedVideoCallback() {
-
-            @Override
-            public void onResult(byte[] videoBuffer, int size) {
-                Log.d(TAG, "airlink recv video data size: " + size);
-                if (useSurface) {
                     DJIVideoStreamDecoder.getInstance().parse(videoBuffer, size);
+                } else if (mCodecManager != null) {
+                    mCodecManager.sendDataToDecoder(videoBuffer, size);
                 }
+
             }
         };
 
@@ -229,16 +225,10 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             mCamera = null;
             showToast("Disconnected");
         } else {
-            if (!mProduct.getModel().equals(Model.UnknownAircraft)) {
-                mCamera = mProduct.getCamera();
-                if (mCamera != null) {
-                    mCamera.setVideoDataCallback(mReceivedVideoDataCallBack);
-                }
-            } else {
-                if (null != mProduct.getAirLink()) {
-                    if (null != mProduct.getAirLink().getLBAirLink()) {
-                        mProduct.getAirLink().getLBAirLink().setDJIOnReceivedVideoCallback(mOnReceivedVideoCallback);
-                    }
+            if (!mProduct.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
+                if (VideoFeeder.getInstance().getVideoFeeds() != null
+                        && VideoFeeder.getInstance().getVideoFeeds().size() > 0) {
+                    VideoFeeder.getInstance().getVideoFeeds().get(0).setCallback(mReceivedVideoDataCallBack);
                 }
             }
         }

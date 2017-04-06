@@ -15,7 +15,6 @@ import android.view.Surface;
 import dji.common.product.Model;
 import dji.log.DJILog;
 import dji.midware.data.model.P3.DataCameraGetPushStateInfo;
-import dji.sdk.base.BaseProduct;
 import dji.sdk.sdkmanager.DJISDKManager;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,23 +23,25 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import dji.sdk.base.BaseProduct;
+
 /**
  * This class is a helper class for hardware decoding. Please follow the following steps to use it:
  *
  * 1. Initialize and set the instance as a listener of NativeDataListener to receive the frame data.
- * 
+ *
  * 2. Send the raw data from camera to ffmpeg for frame parsing.
- * 
+ *
  * 3. Get the parsed frame data from ffmpeg parsing frame callback and cache the parsed framed data into the frameQueue.
- * 
- * 4. Initialize the MediaCodec as a decoder and then check whether there is any i-frame in the MediaCodec. If not, get 
- * the default i-frame from sdk resource and insert it at the head of frameQueue. Then dequeue the framed data from the 
+ *
+ * 4. Initialize the MediaCodec as a decoder and then check whether there is any i-frame in the MediaCodec. If not, get
+ * the default i-frame from sdk resource and insert it at the head of frameQueue. Then dequeue the framed data from the
  * frameQueue and feed it(which is Byte buffer) into the MediaCodec.
- * 
- * 5. Get the output byte buffer from MediaCodec, if a surface(Video Previewing View) is configured in the MediaCodec, 
- * the output byte buffer is only need to be released. If not, the output yuv data should invoke the callback and pass 
+ *
+ * 5. Get the output byte buffer from MediaCodec, if a surface(Video Previewing View) is configured in the MediaCodec,
+ * the output byte buffer is only need to be released. If not, the output yuv data should invoke the callback and pass
  * it out to external listener, it should also be released too.
- * 
+ *
  * 6. Release the ffmpeg and the MediaCodec, stop the decoding thread.
  */
 public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
@@ -235,8 +236,8 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
         int iframeId = dji.midware.R.raw.iframe_1280x720_ins;
 
         switch(pModel) {
-            case Phantom_3_Advanced:
-            case Phantom_3_Standard:
+            case PHANTOM_3_ADVANCED:
+            case PHANTOM_3_STANDARD:
                 if (width==960) {
                     //for photo mode, 960x720, GDR
                     iframeId = dji.midware.R.raw.iframe_960x720_3s;
@@ -262,15 +263,15 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                 }
                 break;
 
-            case Osmo_Pro:
-            case Osmo:
+            case OSMO_PRO:
+            case OSMO:
                 iframeId = -1;
                 break;
 
-            case Phantom_4:
+            case PHANTOM_4:
                 iframeId = dji.midware.R.raw.iframe_1280x720_p4;
                 break;
-            case Phantom4_Pro: // p4p
+            case PHANTOM_4_PRO: // p4p
                 switch (width) {
                     case 1280:
                         iframeId = dji.midware.R.raw.iframe_p4p_720_16x9;
@@ -289,7 +290,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         break;
                 }
                 break;
-            case Inspire_2: //inspire2
+            case INSPIRE_2: //inspire2
                 DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType();
                 if(cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeGD600) {
                     iframeId = dji.midware.R.raw.iframe_1080x720_gd600;
@@ -573,15 +574,15 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             }
             if (defaultKeyFrame != null) {
                 DJIFrame iFrame = new DJIFrame(
-                    defaultKeyFrame,
-                    defaultKeyFrame.length,
-                    inputFrame.pts,
-                    System.currentTimeMillis(),
-                    inputFrame.isKeyFrame,
-                    0,
-                    inputFrame.frameIndex - 1,
-                    inputFrame.width,
-                    inputFrame.height
+                        defaultKeyFrame,
+                        defaultKeyFrame.length,
+                        inputFrame.pts,
+                        System.currentTimeMillis(),
+                        inputFrame.isKeyFrame,
+                        0,
+                        inputFrame.frameIndex - 1,
+                        inputFrame.width,
+                        inputFrame.height
                 );
                 frameQueue.clear();
                 frameQueue.offer(iFrame); // Queue in the I frame.
@@ -595,8 +596,8 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             }
         }
         if (inputFrame.width!=0 && inputFrame.height != 0 &&
-            inputFrame.width != this.width &&
-            inputFrame.height != this.height) {
+                inputFrame.width != this.width &&
+                inputFrame.height != this.height) {
             this.width = inputFrame.width;
             this.height = inputFrame.height;
     	   /*
@@ -649,7 +650,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                 e.printStackTrace();
             }
         }
-       logd(TAG, "decodeFrame: index=" + inIndex);
+        logd(TAG, "decodeFrame: index=" + inIndex);
 
         // Decode the frame using MediaCodec
         if (inIndex >= 0) {
@@ -747,11 +748,11 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             loge( "recv data size: " + size + ", data lenght: " + data.length);
         } else {
             logd( "recv data size: " + size + ", frameNum: "+frameNum+", isKeyframe: "+isKeyFrame+"," +
-                " width: "+width+", height: " + height);
+                    " width: "+width+", height: " + height);
             currentTime = System.currentTimeMillis();
             frameIndex ++;
             DJIFrame newFrame = new DJIFrame(data, size, currentTime, currentTime, isKeyFrame,
-                frameNum, frameIndex, width, height);
+                    frameNum, frameIndex, width, height);
             dataHandler.obtainMessage(MSG_FRAME_QUEUE_IN, newFrame).sendToTarget();
 
         }

@@ -1,6 +1,14 @@
 ECLIPSE ANDROID PROJECT IMPORT SUMMARY
 ======================================
 
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .DS_Store
+
 Replaced Jars with Dependencies:
 --------------------------------
 The importer recognized the following .jar files as third party
@@ -39,6 +47,7 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/arm64-v8a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libSDKRelativeJNI.so
 * libs/arm64-v8a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libUpgradeVerify.so
 * libs/arm64-v8a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libdjivideo.so
+* libs/arm64-v8a/libsqlcipher.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libsqlcipher.so
 * libs/arm64-v8a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libstlport_shared.so
 * libs/arm64-v8a/libudt.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudt.so
 * libs/arm64-v8a/libudtjni.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudtjni.so
@@ -49,6 +58,7 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/armeabi-v7a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libSDKRelativeJNI.so
 * libs/armeabi-v7a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libUpgradeVerify.so
 * libs/armeabi-v7a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libdjivideo.so
+* libs/armeabi-v7a/libsqlcipher.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libsqlcipher.so
 * libs/armeabi-v7a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libstlport_shared.so
 * libs/armeabi-v7a/libudt.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudt.so
 * libs/armeabi-v7a/libudtjni.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudtjni.so
@@ -64,12 +74,14 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/rxjava-1.1.2.jar => dJISDKLIB/libs/rxjava-1.1.2.jar
 * libs/rxjava-computation-expressions-0.21.1.jar => dJISDKLIB/libs/rxjava-computation-expressions-0.21.1.jar
 * libs/sqlbrite-0.6.2.jar => dJISDKLIB/libs/sqlbrite-0.6.2.jar
+* libs/sqlcipher.jar => dJISDKLIB/libs/sqlcipher.jar
 * libs/x86/libFREncrypt.so => dJISDKLIB/src/main/jniLibs/x86/libFREncrypt.so
 * libs/x86/libFlyForbid.so => dJISDKLIB/src/main/jniLibs/x86/libFlyForbid.so
 * libs/x86/libGroudStation.so => dJISDKLIB/src/main/jniLibs/x86/libGroudStation.so
 * libs/x86/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/x86/libSDKRelativeJNI.so
 * libs/x86/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/x86/libUpgradeVerify.so
 * libs/x86/libdjivideo.so => dJISDKLIB/src/main/jniLibs/x86/libdjivideo.so
+* libs/x86/libsqlcipher.so => dJISDKLIB/src/main/jniLibs/x86/libsqlcipher.so
 * libs/x86/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/x86/libstlport_shared.so
 * libs/x86/libudt.so => dJISDKLIB/src/main/jniLibs/x86/libudt.so
 * libs/x86/libudtjni.so => dJISDKLIB/src/main/jniLibs/x86/libudtjni.so
