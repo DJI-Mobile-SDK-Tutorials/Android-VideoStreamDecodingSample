@@ -126,6 +126,10 @@ int parse(JNIEnv *env, jobject obj, uint8_t* pBuff, int videosize, uint64_t pts)
 			LOGE("m_pCodecPaser == NULL");
 			Java_com_dji_videostreamdecodingsample_media_NativeHelper_init(env, obj);
 		}
+		if (m_pCodecCtx == NULL) {
+			LOGE("m_pCodecCtx == NULL");
+			Java_com_dji_videostreamdecodingsample_media_NativeHelper_init(env, obj);
+		}
  		paserLen = av_parser_parse2(m_pCodecPaser, m_pCodecCtx, &packet.data, &packet.size, pFrameBuff,
 				paserLength_In, AV_NOPTS_VALUE, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
 
