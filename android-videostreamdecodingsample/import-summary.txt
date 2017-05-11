@@ -8,15 +8,6 @@ should evaluate whether these are still needed in your project and if
 so manually move them:
 
 * .DS_Store
-* .idea/
-* .idea/API Library.iml
-* .idea/compiler.xml
-* .idea/copyright/
-* .idea/copyright/profiles_settings.xml
-* .idea/encodings.xml
-* .idea/misc.xml
-* .idea/modules.xml
-* .idea/workspace.xml
 
 Replaced Jars with Dependencies:
 --------------------------------
@@ -56,6 +47,7 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/arm64-v8a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libSDKRelativeJNI.so
 * libs/arm64-v8a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libUpgradeVerify.so
 * libs/arm64-v8a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libdjivideo.so
+* libs/arm64-v8a/libffmpeg.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libffmpeg.so
 * libs/arm64-v8a/libsqlcipher.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libsqlcipher.so
 * libs/arm64-v8a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libstlport_shared.so
 * libs/arm64-v8a/libudt.so => dJISDKLIB/src/main/jniLibs/arm64-v8a/libudt.so
@@ -67,6 +59,7 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/armeabi-v7a/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libSDKRelativeJNI.so
 * libs/armeabi-v7a/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libUpgradeVerify.so
 * libs/armeabi-v7a/libdjivideo.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libdjivideo.so
+* libs/armeabi-v7a/libffmpeg.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libffmpeg.so
 * libs/armeabi-v7a/libsqlcipher.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libsqlcipher.so
 * libs/armeabi-v7a/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libstlport_shared.so
 * libs/armeabi-v7a/libudt.so => dJISDKLIB/src/main/jniLibs/armeabi-v7a/libudt.so
@@ -90,6 +83,7 @@ Eclipse projects. Here's how the projects were restructured:
 * libs/x86/libSDKRelativeJNI.so => dJISDKLIB/src/main/jniLibs/x86/libSDKRelativeJNI.so
 * libs/x86/libUpgradeVerify.so => dJISDKLIB/src/main/jniLibs/x86/libUpgradeVerify.so
 * libs/x86/libdjivideo.so => dJISDKLIB/src/main/jniLibs/x86/libdjivideo.so
+* libs/x86/libffmpeg.so => dJISDKLIB/src/main/jniLibs/x86/libffmpeg.so
 * libs/x86/libsqlcipher.so => dJISDKLIB/src/main/jniLibs/x86/libsqlcipher.so
 * libs/x86/libstlport_shared.so => dJISDKLIB/src/main/jniLibs/x86/libstlport_shared.so
 * libs/x86/libudt.so => dJISDKLIB/src/main/jniLibs/x86/libudt.so
