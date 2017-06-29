@@ -1,6 +1,6 @@
 # Android.mk for FFmpeg
 #
-# Lei Xiaohua À×Ïöæè
+# Lei Xiaohua ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 # leixiaohua1020@126.com
 # http://blog.csdn.net/leixiaohua1020
 # 
@@ -9,8 +9,8 @@ LOCAL_PATH := $(call my-dir)
 
 # FFmpeg library
 include $(CLEAR_VARS)
-LOCAL_MODULE := ffmpeg
-LOCAL_SRC_FILES := libffmpeg.so
+LOCAL_MODULE := ffmpegjni
+LOCAL_SRC_FILES := libffmpegjni.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 
@@ -22,5 +22,5 @@ LOCAL_MODULE := djivideojni
 LOCAL_SRC_FILES :=dji_video_jni.c
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 LOCAL_LDLIBS := -llog -lz
-LOCAL_SHARED_LIBRARIES := ffmpeg
+LOCAL_SHARED_LIBRARIES := ffmpegjni
 include $(BUILD_SHARED_LIBRARY)

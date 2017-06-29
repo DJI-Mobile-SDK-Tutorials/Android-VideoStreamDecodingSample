@@ -12,6 +12,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 
+import com.dji.videostreamdecodingsample.R;
 import dji.common.product.Model;
 import dji.log.DJILog;
 import dji.midware.data.model.P3.DataCameraGetPushStateInfo;
@@ -233,17 +234,17 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * @return Resource ID of the IDR frame
      */
     public int getIframeRawId(Model pModel, int width) {
-        int iframeId = dji.midware.R.raw.iframe_1280x720_ins;
+        int iframeId = R.raw.iframe_1280x720_ins;
 
         switch(pModel) {
             case PHANTOM_3_ADVANCED:
             case PHANTOM_3_STANDARD:
                 if (width==960) {
                     //for photo mode, 960x720, GDR
-                    iframeId = dji.midware.R.raw.iframe_960x720_3s;
+                    iframeId = R.raw.iframe_960x720_3s;
                 } else {
                     //for record mode, 1280x720, GDR
-                    iframeId = dji.midware.R.raw.iframe_1280x720_3s;
+                    iframeId = R.raw.iframe_1280x720_3s;
                 }
                 break;
 
@@ -251,14 +252,14 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                 switch(width) {
                     case 640:
                         //for P3-4K with resolution 640*480
-                        iframeId = dji.midware.R.raw.iframe_640x480;
+                        iframeId = R.raw.iframe_640x480;
                         break;
                     case 848:
                         //for P3-4K with resolution 848*480
-                        iframeId = dji.midware.R.raw.iframe_848x480;
+                        iframeId = R.raw.iframe_848x480;
                         break;
                     default:
-                        iframeId = dji.midware.R.raw.iframe_1280x720_3s;
+                        iframeId = R.raw.iframe_1280x720_3s;
                         break;
                 }
                 break;
@@ -269,77 +270,77 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                 break;
 
             case PHANTOM_4:
-                iframeId = dji.midware.R.raw.iframe_1280x720_p4;
+                iframeId = R.raw.iframe_1280x720_p4;
                 break;
             case PHANTOM_4_PRO: // p4p
                 switch (width) {
                     case 1280:
-                        iframeId = dji.midware.R.raw.iframe_p4p_720_16x9;
+                        iframeId = R.raw.iframe_p4p_720_16x9;
                         break;
                     case 960:
-                        iframeId = dji.midware.R.raw.iframe_p4p_720_4x3;
+                        iframeId = R.raw.iframe_p4p_720_4x3;
                         break;
                     case 1088:
-                        iframeId = dji.midware.R.raw.iframe_p4p_720_3x2;
+                        iframeId = R.raw.iframe_p4p_720_3x2;
                         break;
                     case 1344:
-                        iframeId = dji.midware.R.raw.iframe_p4p_1344x720;
+                        iframeId = R.raw.iframe_p4p_1344x720;
                         break;
                     default:
-                        iframeId = dji.midware.R.raw.iframe_p4p_720_16x9;
+                        iframeId = R.raw.iframe_p4p_720_16x9;
                         break;
                 }
                 break;
             case INSPIRE_2: //inspire2
                 DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType();
                 if(cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeGD600) {
-                    iframeId = dji.midware.R.raw.iframe_1080x720_gd600;
+                    iframeId = R.raw.iframe_1080x720_gd600;
                 } else {
                     if (width == 640 && height == 368) {
                         DJILog.i(TAG, "Selected Iframe=iframe_640x368_wm620");
-                        iframeId = dji.midware.R.raw.iframe_640x368_wm620;
+                        iframeId = R.raw.iframe_640x368_wm620;
                     }
                     if (width == 608 && height == 448) {
                         DJILog.i(TAG, "Selected Iframe=iframe_608x448_wm620");
-                        iframeId = dji.midware.R.raw.iframe_608x448_wm620;
+                        iframeId = R.raw.iframe_608x448_wm620;
                     } else if (width == 720 && height == 480) {
                         DJILog.i(TAG, "Selected Iframe=iframe_720x480_wm620");
-                        iframeId = dji.midware.R.raw.iframe_720x480_wm620;
+                        iframeId = R.raw.iframe_720x480_wm620;
                     } else if (width == 1280 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1280x720_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1280x720_wm620;
+                        iframeId = R.raw.iframe_1280x720_wm620;
                     } else if (width == 1080 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1080x720_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1080x720_wm620;
+                        iframeId = R.raw.iframe_1080x720_wm620;
                     } else if (width == 960 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_960x720_wm620");
-                        iframeId = dji.midware.R.raw.iframe_960x720_wm620;
+                        iframeId = R.raw.iframe_960x720_wm620;
                     } else if (width == 1360 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1360x720_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1360x720_wm620;
+                        iframeId = R.raw.iframe_1360x720_wm620;
                     } else if (width == 1344 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1344x720_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1344x720_wm620;
+                        iframeId = R.raw.iframe_1344x720_wm620;
                     } else if (width == 1760 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1760x720_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1760x720_wm620;
+                        iframeId = R.raw.iframe_1760x720_wm620;
                     } else if (width == 1920 && height == 800) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1920x800_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1920x800_wm620;
+                        iframeId = R.raw.iframe_1920x800_wm620;
                     } else if (width == 1920 && height == 1024) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1920x1024_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1920x1024_wm620;
+                        iframeId = R.raw.iframe_1920x1024_wm620;
                     } else if (width == 1920 && height == 1088) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1920x1080_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1920x1088_wm620;
+                        iframeId = R.raw.iframe_1920x1088_wm620;
                     } else if (width == 1920 && height == 1440) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1920x1440_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1920x1440_wm620;
+                        iframeId = R.raw.iframe_1920x1440_wm620;
                     }
                 }
                 break;
             default: //for P3P, Inspire1, etc/
-                iframeId = dji.midware.R.raw.iframe_1280x720_ins;
+                iframeId = R.raw.iframe_1280x720_ins;
                 break;
         }
         return iframeId;
