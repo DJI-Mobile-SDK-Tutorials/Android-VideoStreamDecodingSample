@@ -8,13 +8,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import dji.keysdk.DJIKey;
+import dji.keysdk.KeyManager;
+import dji.keysdk.ProductKey;
+import dji.keysdk.callback.KeyListener;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.products.Aircraft;
 
@@ -27,6 +33,13 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
     private TextView mTextProduct;
     private TextView mTextModelAvailable;
     private Button mBtnOpen;
+    private KeyListener firmVersionListener = new KeyListener() {
+        @Override
+        public void onValueChange(@Nullable Object oldValue, @Nullable Object newValue) {
+            updateVersion();
+        }
+    };
+    private DJIKey firmkey = ProductKey.create(ProductKey.FIRMWARE_PACKAGE_VERSION);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +99,9 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
     protected void onDestroy() {
         Log.e(TAG, "onDestroy");
         unregisterReceiver(mReceiver);
+        if (KeyManager.getInstance() != null) {
+            KeyManager.getInstance().removeListener(firmVersionListener);
+        }
         super.onDestroy();
     }
 
@@ -143,15 +159,19 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
     }
 
     private void updateVersion() {
-        String version = null;
-        if(VideoDecodingApplication.getProductInstance() != null) {
-            version = VideoDecodingApplication.getProductInstance().getFirmwarePackageVersion();
-        }
 
-        if(version == null) {
-            mTextModelAvailable.setText("N/A"); //Firmware version:
-        } else {
-            mTextModelAvailable.setText(version); //"Firmware version: " +
+        if(VideoDecodingApplication.getProductInstance() != null) {
+            final String version = VideoDecodingApplication.getProductInstance().getFirmwarePackageVersion();
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(TextUtils.isEmpty(version)) {
+                        mTextModelAvailable.setText("N/A"); //Firmware version:
+                    } else {
+                        mTextModelAvailable.setText(version); //"Firmware version: " +
+                    }
+                }
+            });
         }
     }
 
@@ -180,12 +200,14 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
 
             String str = mProduct instanceof Aircraft ? "DJIAircraft" : "DJIHandHeld";
             mTextConnectionStatus.setText("Status: " + str + " connected");
-            updateVersion();
 
             if (null != mProduct.getModel()) {
                 mTextProduct.setText("" + mProduct.getModel().getDisplayName());
             } else {
                 mTextProduct.setText(R.string.product_information);
+            }
+            if (KeyManager.getInstance() != null) {
+                KeyManager.getInstance().addListener(firmkey, firmVersionListener);
             }
         } else {
             Log.v(TAG, "refreshSDK: False");
