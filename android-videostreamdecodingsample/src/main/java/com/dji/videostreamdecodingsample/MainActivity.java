@@ -25,11 +25,17 @@ import android.widget.Toast;
 import com.dji.videostreamdecodingsample.media.DJIVideoStreamDecoder;
 
 import com.dji.videostreamdecodingsample.media.NativeHelper;
+
+import dji.common.error.DJIError;
 import dji.common.product.Model;
+import dji.common.useraccount.UserAccountState;
+import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.camera.Camera;
+import dji.sdk.useraccount.UserAccountManager;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -69,6 +75,8 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             DJIVideoStreamDecoder.getInstance().resume();
         }
         notifyStatusChange();
+        loginAccount();
+
     }
 
     @Override
@@ -129,6 +137,23 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         initPreviewer();
 
     }
+
+    private void loginAccount(){
+
+        UserAccountManager.getInstance().logIntoDJIUserAccount(this,
+                new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
+                    @Override
+                    public void onSuccess(final UserAccountState userAccountState) {
+                        Log.e(TAG, "Login Success");
+                    }
+                    @Override
+                    public void onFailure(DJIError error) {
+                        showToast("Login Error:"
+                                + error.getDescription());
+                    }
+                });
+    }
+
 
     public Handler mainHandler = new Handler(Looper.getMainLooper()) {
         @Override
