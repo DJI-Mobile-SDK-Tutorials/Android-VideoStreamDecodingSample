@@ -8,19 +8,20 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 24
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         applicationId "com.dji.videostreamdecodingsample"
         minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
-        ndk {
-            abiFilters "armeabi-v7a"
-        }
+        targetSdkVersion 24
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -37,6 +38,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile project(':dji-sdk')
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.dji:dji-sdk:4.3.2'
 }

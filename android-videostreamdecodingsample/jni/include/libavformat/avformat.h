@@ -2003,32 +2003,32 @@ int av_probe_input_buffer2(AVIOContext *pb, AVInputFormat **fmt,
 int av_probe_input_buffer(AVIOContext *pb, AVInputFormat **fmt,
                           const char *filename, void *logctx,
                           unsigned int offset, unsigned int max_probe_size);
-
 /**
- * returns the global variable to the input demuxer specified by the codec_name.
- * Input:
- * codec_name:
- * a string name of the codec, i.e. "h264", "mp4" and "mov"
- * Returns:
- * unkown demuxer: NULL
- * otherwise: ff_h264_demuxer for h264 raw input
- * ff_mp4_demuxer for mp4 input
- * ff_mov_demuxer for mpv input
+  returns the global variable to the input demuxer specified by the codec_name.
+Input:
+codec_name:
+a string name of the codec, i.e. "h264", "mp4" and "mov"
+Returns:
+unkown demuxer: NULL
+otherwise: ff_h264_demuxer for h264 raw input
+ff_mp4_demuxer for mp4 input
+ff_mov_demuxer for mpv input
  */
 AVInputFormat *avformat_open_specific_input(char * codec_name);
 
 /**
- * returns the global variable to the output muxer specified by the codec_name.
- * Input:
- * codec_name:
- * a string name of the codec, i.e. "h264", "mp4" and "mov"
- * Returns:
- * unkown muxer: NULL
- * otherwise: ff_h264_muxer for h264 raw output
- * ff_mp4_muxer for mp4 output
- * ff_mov_muxer for mpv output
+  returns the global variable to the output muxer specified by the codec_name.
+Input:
+codec_name:
+a string name of the codec, i.e. "h264", "mp4" and "mov"
+Returns:
+unkown muxer: NULL
+otherwise: ff_h264_muxer for h264 raw output
+ff_mp4_muxer for mp4 output
+ff_mov_muxer for mpv output
  */
 AVOutputFormat *avformat_open_specific_output(char * codec_name);
+
 /**
  * Open an input stream and read the header. The codecs are not opened.
  * The stream must be closed with avformat_close_input().

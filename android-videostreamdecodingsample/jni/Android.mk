@@ -1,16 +1,10 @@
-# Android.mk for FFmpeg
-#
-# Lei Xiaohua ������
-# leixiaohua1020@126.com
-# http://blog.csdn.net/leixiaohua1020
-# 
-
+include $(all-subdir-makefiles)
 LOCAL_PATH := $(call my-dir)
 
 # FFmpeg library
 include $(CLEAR_VARS)
 LOCAL_MODULE := ffmpegjni
-LOCAL_SRC_FILES := libffmpegjni.so
+LOCAL_SRC_FILES := lib/$(TARGET_ARCH_ABI)/libffmpeg.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 

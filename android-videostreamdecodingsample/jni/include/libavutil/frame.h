@@ -562,10 +562,6 @@ typedef struct AVFrame {
      * Not to be accessed directly from outside libavutil
      */
     AVBufferRef *qp_table_buf;
-    
-    /**
-     * TDL
-     */
     int poc;
 } AVFrame;
 

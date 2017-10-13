@@ -4347,16 +4347,16 @@ typedef struct AVCodecParserContext {
      *
      * For example, this corresponds to H.264 PicOrderCnt.
      */
-    /*specific parameters export for H264 parsing, for the rest codec, 0 is default*/
+	/*specific parameters export for H264 parsing, for the rest codec, 0 is default*/
     int output_picture_number;
-    int frame_num;
-    int max_frame_num_plus1;
-    int width_in_pixel;
-    int height_in_pixel;
-    int frame_rate_num;
-    int frame_rate_den;
-    int frame_has_sps;
-    int frame_has_pps;
+	int frame_num;
+	int max_frame_num_plus1;
+	int width_in_pixel;
+	int height_in_pixel;
+	int frame_rate_num;
+	int frame_rate_den;
+	int frame_has_sps;
+	int frame_has_pps;
 } AVCodecParserContext;
 
 typedef struct AVCodecParser {

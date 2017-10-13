@@ -75,16 +75,13 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             DJIVideoStreamDecoder.getInstance().resume();
         }
         notifyStatusChange();
-        loginAccount();
-
     }
 
     @Override
     protected void onPause() {
         if (mCamera != null) {
-            if (VideoFeeder.getInstance().getVideoFeeds() != null
-                    && VideoFeeder.getInstance().getVideoFeeds().size() > 0) {
-                VideoFeeder.getInstance().getVideoFeeds().get(0).setCallback(null);
+            if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
+                VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(null);
             }
         }
         if (useSurface) {
@@ -137,23 +134,6 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         initPreviewer();
 
     }
-
-    private void loginAccount(){
-
-        UserAccountManager.getInstance().logIntoDJIUserAccount(this,
-                new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
-                    @Override
-                    public void onSuccess(final UserAccountState userAccountState) {
-                        Log.e(TAG, "Login Success");
-                    }
-                    @Override
-                    public void onFailure(DJIError error) {
-                        showToast("Login Error:"
-                                + error.getDescription());
-                    }
-                });
-    }
-
 
     public Handler mainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -226,6 +206,9 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         Log.d(TAG, "notifyStatusChange: " + (mProduct == null ? "Disconnect" : (mProduct.getModel() == null ? "null model" : mProduct.getModel().name())));
         if (mProduct != null && mProduct.isConnected() && mProduct.getModel() != null) {
             updateTitle(mProduct.getModel().name() + " Connected");
+
+            loginAccount();
+
         } else {
             updateTitle("Disconnected");
         }
@@ -251,12 +234,28 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             showToast("Disconnected");
         } else {
             if (!mProduct.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
-                if (VideoFeeder.getInstance().getVideoFeeds() != null
-                        && VideoFeeder.getInstance().getVideoFeeds().size() > 0) {
-                    VideoFeeder.getInstance().getVideoFeeds().get(0).setCallback(mReceivedVideoDataCallBack);
+                if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null
+                        ) {
+                    VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(mReceivedVideoDataCallBack);
                 }
             }
         }
+    }
+
+    private void loginAccount(){
+
+        UserAccountManager.getInstance().logIntoDJIUserAccount(this,
+                new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
+                    @Override
+                    public void onSuccess(final UserAccountState userAccountState) {
+                        Log.e(TAG, "Login Success");
+                    }
+                    @Override
+                    public void onFailure(DJIError error) {
+                        showToast("Login Error:"
+                                + error.getDescription());
+                    }
+                });
     }
 
     /**
@@ -400,16 +399,16 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         }
     }
 
-    private void displayPath(String path){
+    private void displayPath(String path) {
         path = path + "\n\n";
-        if(pathList.size() < 6){
+        if (pathList.size() < 6) {
             pathList.add(path);
-        }else{
+        } else {
             pathList.remove(0);
             pathList.add(path);
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 0 ;i < pathList.size();i++){
+        for (int i = 0; i < pathList.size(); i++) {
             stringBuilder.append(pathList.get(i));
         }
         savePath.setText(stringBuilder.toString());

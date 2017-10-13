@@ -426,17 +426,6 @@ int avio_open2(AVIOContext **s, const char *url, int flags,
                const AVIOInterruptCB *int_cb, AVDictionary **options);
 
 /**
- * Open the resource accessed by the AVIOContext:
- * The pb it openned is an empty one. Data is get from external device
- * which is not accessable by ffmpeg
- *
- * @return 0 on success, an AVERROR < 0 on error.
- * @see avio_closep
- */
-
-int avio_open_stream(AVIOContext **s);
-
-/**
  * Close the resource accessed by the AVIOContext s and free it.
  * This function can only be used if s was opened by avio_open().
  *
@@ -449,6 +438,17 @@ int avio_open_stream(AVIOContext **s);
 int avio_close(AVIOContext *s);
 
 /**
+ * Open the resource accessed by the AVIOContext: 
+ * The pb it openned is an empty one. Data is get from external device 
+ * which is not accessable by ffmpeg
+ *
+ * @return 0 on success, an AVERROR < 0 on error.
+ * @see avio_closep
+ */
+
+int avio_open_stream(AVIOContext **s);
+
+/**
  * Close the resource accessed by the AVIOContext s and free it.
  * This function can only be used if s was opened by avio_open_stream().
  *
@@ -456,6 +456,7 @@ int avio_close(AVIOContext *s);
  * @see avio_closep
  */
 int avio_close_stream(AVIOContext *s);
+
 
 /**
  * Close the resource accessed by the AVIOContext *s, free it

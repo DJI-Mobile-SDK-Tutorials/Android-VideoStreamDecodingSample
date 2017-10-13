@@ -58,7 +58,7 @@ public class NativeHelper {
     public native boolean release();
 
     static{
-        System.loadLibrary("ffmpegjni");
+        System.loadLibrary("ffmpeg");
         System.loadLibrary("djivideojni");
     }
 
