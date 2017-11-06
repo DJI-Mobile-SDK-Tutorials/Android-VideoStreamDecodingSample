@@ -1,16 +1,18 @@
+CUR_LOCAL_PATH := $(call my-dir)
 include $(all-subdir-makefiles)
-LOCAL_PATH := $(call my-dir)
+
 
 # FFmpeg library
 include $(CLEAR_VARS)
 LOCAL_MODULE := ffmpegjni
-LOCAL_SRC_FILES := lib/$(TARGET_ARCH_ABI)/libffmpeg.so
+LOCAL_SRC_FILES := $(TARGET_ARCH_ABI)/libffmpeg.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 
 
 # Program
 include $(CLEAR_VARS)
+LOCAL_PATH := $(CUR_LOCAL_PATH)
 PATH_TO_LIBFFMPEG_SO=$(LOCAL_PATH)
 LOCAL_MODULE := djivideojni
 LOCAL_SRC_FILES :=dji_video_jni.c

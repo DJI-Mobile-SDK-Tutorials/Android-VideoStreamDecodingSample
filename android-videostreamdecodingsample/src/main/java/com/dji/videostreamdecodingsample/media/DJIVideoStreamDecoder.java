@@ -51,21 +51,15 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     private static final int MSG_INIT_CODEC = 0;
     private static final int MSG_FRAME_QUEUE_IN = 1;
     private static final int MSG_DECODE_FRAME = 2;
-    private static final int MSG_CHANGE_SURFACE = 3;
-    private static final int CODEC_DEQUEUE_INPUT_QUEUE_RETRY = 20;
+    private static final int MSG_YUV_DATA = 3;
     public static final String VIDEO_ENCODING_FORMAT = "video/avc";
-    private static HandlerThread  handlerThreadNew = new HandlerThread("native parser thread");
-    private static Handler handlerNew;
-
+    private HandlerThread  handlerThreadNew;
+    private Handler handlerNew;
     private final boolean DEBUG = false;
-
     private static DJIVideoStreamDecoder instance;
-
     private Queue<DJIFrame> frameQueue;
     private HandlerThread dataHandlerThread;
     private Handler dataHandler;
-    private HandlerThread callbackHandlerThread;
-    private Handler callbackHandler;
     private Context context;
     private MediaCodec codec;
     private Surface surface;
@@ -75,9 +69,6 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     public int width;
     public int height;
     private boolean hasIFrameInQueue = false;
-    private boolean hasIFrameInCodec;
-    private ByteBuffer[] inputBuffers;
-    private ByteBuffer[] outputBuffers;
     MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
     LinkedList<Long> bufferChangedQueue=new LinkedList<Long>();
 
@@ -175,9 +166,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
         createTime = System.currentTimeMillis();
         frameQueue = new ArrayBlockingQueue<DJIFrame>(BUF_QUEUE_SIZE);
         startDataHandler();
-        callbackHandlerThread = new HandlerThread("callback handler");
-        callbackHandlerThread.start();
-        callbackHandler = new Handler(callbackHandlerThread.getLooper());
+        handlerThreadNew = new HandlerThread("native parser thread");
         handlerThreadNew.start();
         handlerNew = new Handler(handlerThreadNew.getLooper(), new Handler.Callback() {
             @Override
@@ -219,12 +208,10 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * @param size Data length
      */
     public void parse(byte[] buf, int size) {
-        logd( "parse data size: " + size);
         Message message =handlerNew.obtainMessage();
         message.obj = buf;
         message.arg1 = size;
         handlerNew.sendMessage(message);
-
     }
 
     /**
@@ -412,13 +399,6 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             }
             // Start the codec
             codec.start();
-            logd( "initVideoDecoder start");
-            // Get the input and output buffers of hardware decoder
-            inputBuffers = codec.getInputBuffers();
-            outputBuffers = codec.getOutputBuffers();
-            logd( "initVideoDecoder get buffers");
-
-
         } catch (Exception e) {
             loge("init codec failed, do it again: " + e);
             if (e instanceof MediaCodec.CodecException) {
@@ -476,15 +456,16 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                             }
                         }
                         break;
-                    case MSG_CHANGE_SURFACE:
-
+                    case MSG_YUV_DATA:
+                        if (yuvDataListener != null) {
+                            yuvDataListener.onYuvDataReceived((byte[])msg.obj, msg.arg1, msg.arg2);
+                        }
                         break;
                     default:
                         break;
                 }
             }
         };
-        dataHandler.sendEmptyMessage(MSG_DECODE_FRAME);
     }
 
     /**
@@ -520,9 +501,11 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * @param surface
      */
     public void changeSurface(Surface surface) {
-        this.surface = surface;
-        if (dataHandler != null && !dataHandler.hasMessages(MSG_INIT_CODEC)) {
-            dataHandler.sendEmptyMessage(MSG_INIT_CODEC);
+        if (this.surface != surface) {
+            this.surface = surface;
+            if (dataHandler != null && !dataHandler.hasMessages(MSG_INIT_CODEC)) {
+                dataHandler.sendEmptyMessage(MSG_INIT_CODEC);
+            }
         }
     }
 
@@ -533,17 +516,16 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
         if (frameQueue!=null){
             frameQueue.clear();
             hasIFrameInQueue = false;
-            hasIFrameInCodec = false;
         }
         if (codec != null) {
             try {
                 codec.flush();
             } catch (Exception e) {
                 loge("flush codec error: " + e.getMessage());
-                codec = null;
             }
 
             try {
+                codec.stop();
                 codec.release();
             } catch (Exception e) {
                 loge("close codec error: " + e.getMessage());
@@ -636,56 +618,40 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             if (dataHandler != null && !dataHandler.hasMessages(MSG_INIT_CODEC)) {
                 dataHandler.sendEmptyMessage(MSG_INIT_CODEC);
             }
+            return;
         }
-        int inIndex = -1;
 
-        // Get input buffer index of the MediaCodec.
-        for (int i = 0; i < CODEC_DEQUEUE_INPUT_QUEUE_RETRY && inIndex < 0; i ++) {
-            try {
-                inIndex = codec.dequeueInputBuffer(0);
-            } catch (IllegalStateException e) {
-                logd(TAG, "decodeFrame: dequeue input: " + e);
-                codec.stop();
-                codec.reset();
-                initCodec();
-                e.printStackTrace();
-            }
-        }
-        logd(TAG, "decodeFrame: index=" + inIndex);
+        int inIndex = codec.dequeueInputBuffer(0);
 
         // Decode the frame using MediaCodec
         if (inIndex >= 0) {
-            ByteBuffer buffer = inputBuffers[inIndex];
-            buffer.clear();
-            buffer.rewind();
+            //Log.d(TAG, "decodeFrame: index=" + inIndex);
+            ByteBuffer buffer = codec.getInputBuffer(inIndex);
             buffer.put(inputFrame.videoBuffer);
-
             inputFrame.fedIntoCodecTime = System.currentTimeMillis();
             long queueingDelay = inputFrame.getQueueDelay();
-            logd("input frame delay: " + queueingDelay);
             // Feed the frame data to the decoder.
             codec.queueInputBuffer(inIndex, 0, inputFrame.size, inputFrame.pts, 0);
-            hasIFrameInCodec = true;
 
             // Get the output data from the decoder.
-            int outIndex = -1;
-            outIndex = codec.dequeueOutputBuffer(bufferInfo, 0);
-            logd(TAG, "decodeFrame: outIndex: " + outIndex);
+            int outIndex = codec.dequeueOutputBuffer(bufferInfo, 0);
+
             if (outIndex >= 0) {
+                //Log.d(TAG, "decodeFrame: outIndex: " + outIndex);
                 if (surface == null && yuvDataListener != null) {
                     // If the surface is null, the yuv data should be get from the buffer and invoke the callback.
                     logd("decodeFrame: need callback");
-                    ByteBuffer yuvDataBuf = outputBuffers[outIndex];
+                    ByteBuffer yuvDataBuf = codec.getOutputBuffer(outIndex);
                     yuvDataBuf.position(bufferInfo.offset);
                     yuvDataBuf.limit(bufferInfo.size - bufferInfo.offset);
-                    final byte[] bytes = new byte[bufferInfo.size - bufferInfo.offset];
+                    byte[] bytes = new byte[bufferInfo.size - bufferInfo.offset];
                     yuvDataBuf.get(bytes);
-                    callbackHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            yuvDataListener.onYuvDataReceived(bytes, width, height);
-                        }
-                    });
+                    Message message = dataHandler.obtainMessage();
+                    message.obj = bytes;
+                    message.arg1 = width;
+                    message.arg2 = height;
+                    message.what = MSG_YUV_DATA;
+                    dataHandler.sendMessage(message);
                 }
                 // All the output buffer must be release no matter whether the yuv data is output or
                 // not, so that the codec can reuse the buffer.
@@ -706,13 +672,11 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         return;
                     }
                 }
-                if (outputBuffers == null) {
-                    return;
-                }
-                outputBuffers = codec.getOutputBuffers();
             } else if (outIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                 loge("format changed, color: " + codec.getOutputFormat().getInteger(MediaFormat.KEY_COLOR_FORMAT));
             }
+        }else {
+            codec.flush();
         }
     }
 
@@ -720,10 +684,14 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * Stop the decoding process.
      */
     public void stop() {
-        dataHandler.removeCallbacksAndMessages(null);
-        frameQueue.clear();
-        hasIFrameInQueue = false;
-        hasIFrameInCodec = false;
+        if (dataHandler != null) {
+            dataHandler.removeCallbacksAndMessages(null);
+        }
+
+        if (frameQueue!=null){
+            frameQueue.clear();
+            hasIFrameInQueue = false;
+        }
         if (codec != null) {
             try {
                 codec.flush();

@@ -9,7 +9,6 @@ import android.graphics.YuvImage;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Bundle;
@@ -26,29 +25,23 @@ import com.dji.videostreamdecodingsample.media.DJIVideoStreamDecoder;
 
 import com.dji.videostreamdecodingsample.media.NativeHelper;
 
-import dji.common.error.DJIError;
 import dji.common.product.Model;
-import dji.common.useraccount.UserAccountState;
-import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.camera.Camera;
-import dji.sdk.useraccount.UserAccountManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuvDataListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    static final int MSG_WHAT_SHOW_TOAST = 0;
-    static final int MSG_WHAT_UPDATE_TITLE = 1;
-    static final boolean useSurface = true;
+    private static final int MSG_WHAT_SHOW_TOAST = 0;
+    private static final int MSG_WHAT_UPDATE_TITLE = 1;
+    private static final boolean useSurface = true;
 
     private TextView titleTv;
     private TextureView videostreamPreviewTtView;
@@ -61,10 +54,8 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
 
     private TextView savePath;
     private TextView screenShot;
-    private List<String> pathList = new ArrayList<>();
 
-    private HandlerThread backgroundHandlerThread;
-    public Handler backgroundHandler;
+    private StringBuilder stringBuilder;
 
     protected VideoFeeder.VideoDataCallback mReceivedVideoDataCallBack = null;
 
@@ -72,7 +63,9 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     protected void onResume() {
         super.onResume();
         if (useSurface) {
-            DJIVideoStreamDecoder.getInstance().resume();
+            initPreviewerSurfaceView();
+        } else {
+            initPreviewerTextureView();
         }
         notifyStatusChange();
     }
@@ -84,17 +77,13 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
                 VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(null);
             }
         }
-        if (useSurface) {
-            DJIVideoStreamDecoder.getInstance().stop();
-        }
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         if (useSurface) {
-            DJIVideoStreamDecoder.getInstance().destroy();
-            NativeHelper.getInstance().release();
+
         }
         if (mCodecManager != null) {
             mCodecManager.destroyCodec();
@@ -105,8 +94,6 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        NativeHelper.getInstance().init();
 
         // When the compile and target version is higher than 22, please request the
         // following permissions at runtime to ensure the
@@ -125,14 +112,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         }
 
         setContentView(R.layout.activity_main);
-
-        backgroundHandlerThread = new HandlerThread("background handler thread");
-        backgroundHandlerThread.start();
-        backgroundHandler = new Handler(backgroundHandlerThread.getLooper());
-
         initUi();
-        initPreviewer();
-
     }
 
     public Handler mainHandler = new Handler(Looper.getMainLooper()) {
@@ -172,27 +152,10 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         titleTv = (TextView) findViewById(R.id.title_tv);
         videostreamPreviewTtView = (TextureView) findViewById(R.id.livestream_preview_ttv);
         videostreamPreviewSf = (SurfaceView) findViewById(R.id.livestream_preview_sf);
-        videostreamPreviewSh = videostreamPreviewSf.getHolder();
         if (useSurface) {
             videostreamPreviewSf.setVisibility(View.VISIBLE);
             videostreamPreviewTtView.setVisibility(View.GONE);
-            videostreamPreviewSh.addCallback(new SurfaceHolder.Callback() {
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
-                    DJIVideoStreamDecoder.getInstance().init(getApplicationContext(), videostreamPreviewSh.getSurface());
-                    DJIVideoStreamDecoder.getInstance().setYuvDataListener(MainActivity.this);
-                }
 
-                @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    DJIVideoStreamDecoder.getInstance().changeSurface(holder.getSurface());
-                }
-
-                @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-
-                }
-            });
         } else {
             videostreamPreviewSf.setVisibility(View.GONE);
             videostreamPreviewTtView.setVisibility(View.VISIBLE);
@@ -206,9 +169,6 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
         Log.d(TAG, "notifyStatusChange: " + (mProduct == null ? "Disconnect" : (mProduct.getModel() == null ? "null model" : mProduct.getModel().name())));
         if (mProduct != null && mProduct.isConnected() && mProduct.getModel() != null) {
             updateTitle(mProduct.getModel().name() + " Connected");
-
-            loginAccount();
-
         } else {
             updateTitle("Disconnected");
         }
@@ -218,8 +178,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
 
             @Override
             public void onReceive(byte[] videoBuffer, int size) {
-
-                Log.d(TAG, "camera recv video data size: " + size);
+                //Log.d(TAG, "camera recv video data size: " + size);
                 if (useSurface) {
                     DJIVideoStreamDecoder.getInstance().parse(videoBuffer, size);
                 } else if (mCodecManager != null) {
@@ -234,35 +193,18 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             showToast("Disconnected");
         } else {
             if (!mProduct.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
-                if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null
-                        ) {
+                if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
                     VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(mReceivedVideoDataCallBack);
                 }
             }
         }
     }
 
-    private void loginAccount(){
-
-        UserAccountManager.getInstance().logIntoDJIUserAccount(this,
-                new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
-                    @Override
-                    public void onSuccess(final UserAccountState userAccountState) {
-                        Log.e(TAG, "Login Success");
-                    }
-                    @Override
-                    public void onFailure(DJIError error) {
-                        showToast("Login Error:"
-                                + error.getDescription());
-                    }
-                });
-    }
-
     /**
      * Init a fake texture view to for the codec manager, so that the video raw data can be received
      * by the camera
      */
-    private void initPreviewer() {
+    private void initPreviewerTextureView() {
         videostreamPreviewTtView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -285,6 +227,34 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
+            }
+        });
+    }
+
+    /**
+     * Init a surface view for the DJIVideoStreamDecoder
+     */
+    private void initPreviewerSurfaceView(){
+        videostreamPreviewSh = videostreamPreviewSf.getHolder();
+        videostreamPreviewSh.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                NativeHelper.getInstance().init();
+                DJIVideoStreamDecoder.getInstance().init(getApplicationContext(), videostreamPreviewSh.getSurface());
+                DJIVideoStreamDecoder.getInstance().setYuvDataListener(MainActivity.this);
+                DJIVideoStreamDecoder.getInstance().resume();
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                DJIVideoStreamDecoder.getInstance().changeSurface(holder.getSurface());
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                DJIVideoStreamDecoder.getInstance().stop();
+                DJIVideoStreamDecoder.getInstance().destroy();
+                NativeHelper.getInstance().release();
             }
         });
     }
@@ -380,13 +350,14 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
 
     public void onClick(View v) {
         if (screenShot.isSelected()) {
-            screenShot.setText("Screen Shot");
+            screenShot.setText("YUV Screen Shot");
             screenShot.setSelected(false);
             if (useSurface) {
                 DJIVideoStreamDecoder.getInstance().changeSurface(videostreamPreviewSh.getSurface());
             }
             savePath.setText("");
             savePath.setVisibility(View.INVISIBLE);
+            stringBuilder = null;
         } else {
             screenShot.setText("Live Stream");
             screenShot.setSelected(true);
@@ -395,23 +366,16 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             }
             savePath.setText("");
             savePath.setVisibility(View.VISIBLE);
-            pathList.clear();
         }
     }
 
     private void displayPath(String path) {
-        path = path + "\n\n";
-        if (pathList.size() < 6) {
-            pathList.add(path);
-        } else {
-            pathList.remove(0);
-            pathList.add(path);
+        if (stringBuilder == null) {
+            stringBuilder = new StringBuilder();
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < pathList.size(); i++) {
-            stringBuilder.append(pathList.get(i));
-        }
+
+        path = path + "\n";
+        stringBuilder.append(path);
         savePath.setText(stringBuilder.toString());
     }
-
 }
