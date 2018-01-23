@@ -1,18 +1,15 @@
 package com.dji.videostreamdecodingsample;
 
-import android.Manifest;
 import android.app.Activity;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.YuvImage;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -22,14 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dji.videostreamdecodingsample.media.DJIVideoStreamDecoder;
-
 import com.dji.videostreamdecodingsample.media.NativeHelper;
-
-import dji.common.product.Model;
-import dji.sdk.base.BaseProduct;
-import dji.sdk.camera.VideoFeeder;
-import dji.sdk.codec.DJICodecManager;
-import dji.sdk.camera.Camera;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,27 +27,44 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import dji.common.product.Model;
+import dji.sdk.base.BaseProduct;
+import dji.sdk.camera.Camera;
+import dji.sdk.camera.VideoFeeder;
+import dji.sdk.codec.DJICodecManager;
+
 public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuvDataListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int MSG_WHAT_SHOW_TOAST = 0;
     private static final int MSG_WHAT_UPDATE_TITLE = 1;
     private static final boolean useSurface = true;
-
+    protected VideoFeeder.VideoDataCallback mReceivedVideoDataCallBack = null;
     private TextView titleTv;
+    public Handler mainHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_WHAT_SHOW_TOAST:
+                    Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
+                    break;
+                case MSG_WHAT_UPDATE_TITLE:
+                    if (titleTv != null) {
+                        titleTv.setText((String) msg.obj);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private TextureView videostreamPreviewTtView;
     private SurfaceView videostreamPreviewSf;
     private SurfaceHolder videostreamPreviewSh;
-
-    private BaseProduct mProduct;
     private Camera mCamera;
     private DJICodecManager mCodecManager;
-
     private TextView savePath;
     private TextView screenShot;
-
     private StringBuilder stringBuilder;
-
-    protected VideoFeeder.VideoDataCallback mReceivedVideoDataCallBack = null;
 
     @Override
     protected void onResume() {
@@ -95,43 +102,9 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // When the compile and target version is higher than 22, please request the
-        // following permissions at runtime to ensure the
-        // SDK work well.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.VIBRATE,
-                            Manifest.permission.INTERNET, Manifest.permission.ACCESS_WIFI_STATE,
-                            Manifest.permission.WAKE_LOCK, Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
-                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SYSTEM_ALERT_WINDOW,
-                            Manifest.permission.READ_PHONE_STATE,
-                    }
-                    , 1);
-        }
-
         setContentView(R.layout.activity_main);
         initUi();
     }
-
-    public Handler mainHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_WHAT_SHOW_TOAST:
-                    Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
-                    break;
-                case MSG_WHAT_UPDATE_TITLE:
-                    if (titleTv != null) {
-                        titleTv.setText((String) msg.obj);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     private void showToast(String s) {
         mainHandler.sendMessage(
@@ -164,11 +137,11 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
 
     private void notifyStatusChange() {
 
-        mProduct = VideoDecodingApplication.getProductInstance();
+        final BaseProduct product = VideoDecodingApplication.getProductInstance();
 
-        Log.d(TAG, "notifyStatusChange: " + (mProduct == null ? "Disconnect" : (mProduct.getModel() == null ? "null model" : mProduct.getModel().name())));
-        if (mProduct != null && mProduct.isConnected() && mProduct.getModel() != null) {
-            updateTitle(mProduct.getModel().name() + " Connected");
+        Log.d(TAG, "notifyStatusChange: " + (product == null ? "Disconnect" : (product.getModel() == null ? "null model" : product.getModel().name())));
+        if (product != null && product.isConnected() && product.getModel() != null) {
+            updateTitle(product.getModel().name() + " Connected");
         } else {
             updateTitle("Disconnected");
         }
@@ -188,11 +161,11 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
             }
         };
 
-        if (null == mProduct || !mProduct.isConnected()) {
+        if (null == product || !product.isConnected()) {
             mCamera = null;
             showToast("Disconnected");
         } else {
-            if (!mProduct.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
+            if (!product.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
                 if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
                     VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(mReceivedVideoDataCallBack);
                 }
@@ -220,7 +193,9 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
 
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                if (mCodecManager != null) mCodecManager.cleanSurface();
+                if (mCodecManager != null) {
+                    mCodecManager.cleanSurface();
+                }
                 return false;
             }
 
@@ -234,7 +209,7 @@ public class MainActivity extends Activity implements DJIVideoStreamDecoder.IYuv
     /**
      * Init a surface view for the DJIVideoStreamDecoder
      */
-    private void initPreviewerSurfaceView(){
+    private void initPreviewerSurfaceView() {
         videostreamPreviewSh = videostreamPreviewSf.getHolder();
         videostreamPreviewSh.addCallback(new SurfaceHolder.Callback() {
             @Override
