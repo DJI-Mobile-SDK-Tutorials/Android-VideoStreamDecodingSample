@@ -40,3 +40,8 @@ Please use **Github Issue** or **email** [oliver.ou@dji.com](oliver.ou@dji.com) 
 
 Android-VideoStreamDecodingSample is available under the MIT license. Please see the LICENSE file for more info.
 
+## Join Us
+
+DJI is looking for all kinds of Software Engineers to continue building the Future of Possible. Available positions in Shenzhen, China and around the world. If you are interested, please send your resume to <software-sz@dji.com>. For more details, and list of all our global offices, please check <https://we.dji.com/jobs_en.html>.
+
+DJI 招软件工程师啦，based在深圳，如果你想和我们一起把DJI产品做得更好，请发送简历到 <software-sz@dji.com>.  详情请浏览 <https://we.dji.com/zh-CN/recruitment>.
