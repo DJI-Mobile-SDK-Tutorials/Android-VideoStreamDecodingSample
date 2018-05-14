@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@android:color/white"
-            android:text="@string/title_main_activity"
-            android:textSize="21sp"/>
+            android:text="@string/title_main_activity"/>
 
     </RelativeLayout>
 
@@ -42,20 +41,49 @@
         android:visibility="gone"
         android:layout_below="@id/main_title_rl"/>
 
-    <TextView
-        android:id="@+id/activity_main_screen_shot"
+    <LinearLayout
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="YUV Screen Shot"
-        android:clickable="true"
-        android:onClick="onClick"
-        android:padding="5dp"
-        android:gravity="center"
-        android:background="@color/colorWhite"
-        android:textColor="@color/colorBlack"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/main_title_rl"
-        />
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/activity_main_screen_texture"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Demo TextureView"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:gravity="center"  />
+
+        <Button
+            android:id="@+id/activity_main_screen_surface"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Demo SurfaceView"
+            android:onClick="onClick"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/activity_main_screen_surface_with_own_decoder"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Demo custom decoder"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/activity_main_screen_shot"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="YUV Screen Shot"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:gravity="center" />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/activity_main_save_path"
         android:layout_width="400dp"

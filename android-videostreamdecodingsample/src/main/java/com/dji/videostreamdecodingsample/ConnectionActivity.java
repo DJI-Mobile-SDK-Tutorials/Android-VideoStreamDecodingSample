@@ -144,7 +144,12 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                                 DJILog.e("App registration", DJISDKError.REGISTRATION_SUCCESS.getDescription());
                                 DJISDKManager.getInstance().startConnectionToProduct();
                                 showToast("Register SDK Success");
-                                loginDJIUserAccount();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loginDJIUserAccount();
+                                    }
+                                });
                             } else {
                                 showToast("Register sdk fails, check network is available");
                             }
@@ -174,7 +179,7 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                 new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
                     @Override
                     public void onSuccess(final UserAccountState userAccountState) {
-                        showToast(userAccountState.name());
+                        showToast("login success! Account state is:" +userAccountState.name());
                     }
 
                     @Override
@@ -253,6 +258,7 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
         mBtnOpen = (Button) findViewById(R.id.btn_open);
         mBtnOpen.setOnClickListener(this);
         mBtnOpen.setEnabled(false);
+        ((TextView)findViewById(R.id.textView2)).setText(DJISDKManager.getInstance().getSDKVersion());
 
     }
 

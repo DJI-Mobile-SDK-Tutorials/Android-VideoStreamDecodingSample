@@ -16,6 +16,8 @@ import com.dji.videostreamdecodingsample.R;
 import dji.common.product.Model;
 import dji.log.DJILog;
 import dji.midware.data.model.P3.DataCameraGetPushStateInfo;
+import dji.sdk.codec.DJICodecManager;
+import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,16 +76,6 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
 
     private long createTime;
 
-    public interface IYuvDataListener {
-        /**
-         * Callback method for processing the yuv frame data from hardware decoder.
-         * @param yuvFrame
-         * @param width
-         * @param height
-         */
-        void onYuvDataReceived(byte[] yuvFrame, int width, int height);
-    }
-
     /**
      * Set the yuv frame data receiving callback. The callback method will be invoked when the decoder
      * output yuv frame data. What should be noted here is that the hardware decoder would not output
@@ -91,11 +83,11 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
      * should set "null" surface when calling the "configure" method of MediaCodec.
      * @param yuvDataListener
      */
-    public void setYuvDataListener(IYuvDataListener yuvDataListener) {
+    public void setYuvDataListener(DJICodecManager.YuvDataCallback yuvDataListener) {
         this.yuvDataListener = yuvDataListener;
     }
 
-    private IYuvDataListener yuvDataListener;
+    private DJICodecManager.YuvDataCallback yuvDataListener;
 
     /**
      * A data structure for containing the frames.
@@ -179,7 +171,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     }
 
 
-    public static DJIVideoStreamDecoder getInstance() {
+    public synchronized static DJIVideoStreamDecoder getInstance() {
         if (instance == null) {
             instance = new DJIVideoStreamDecoder();
         }
@@ -250,16 +242,65 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         break;
                 }
                 break;
-
-            case OSMO_PRO:
             case OSMO:
-                iframeId = -1;
+                if (DataCameraGetPushStateInfo.getInstance().getVerstion() >= 4) {
+                    iframeId = -1;
+                } else {
+                    iframeId = dji.midware.R.raw.iframe_1280x720_ins;
+                }
                 break;
-
+            case OSMO_PLUS:
+                if (width == 960)
+                {
+                    iframeId = R.raw.iframe_960x720_3s;
+                }else if(width == 640){
+                    iframeId = R.raw.iframe_640x480;
+                } else {
+                    iframeId = R.raw.iframe_1280x720_3s;
+                }
+                break;
+            case OSMO_PRO:
+            case OSMO_RAW:
+                iframeId = dji.midware.R.raw.iframe_1280x720_ins;
+                break;
+            case MAVIC_PRO: //product small drone
+                if (((Aircraft) DJISDKManager.getInstance().getProduct()).getMobileRemoteController() != null) {
+                    iframeId = dji.midware.R.raw.iframe_1280x720_wm220;
+                } else{
+                    iframeId = -1;
+                }
+                break;
+            case Spark:
+                switch (width) {
+                    case 1280:  // 与P4相同
+                        iframeId = dji.midware.R.raw.iframe_1280x720_p4;
+                        break;
+                    case 1024:
+                        iframeId = dji.midware.R.raw.iframe_1024x768_wm100;
+                        break;
+                    default:
+                        iframeId = dji.midware.R.raw.iframe_1280x720_p4;
+                        break;
+                }
+                break;
+            case MAVIC_AIR:
+                switch (height) {
+                    case 960:
+                        iframeId = R.raw.iframe_1280x960_wm230;
+                        break;
+                    case 720:
+                        iframeId = R.raw.iframe_1280x720_wm230;
+                        break;
+                    default:
+                        iframeId = R.raw.iframe_1280x720_wm230;
+                        break;
+                }
+                break;
             case PHANTOM_4:
                 iframeId = R.raw.iframe_1280x720_p4;
                 break;
             case PHANTOM_4_PRO: // p4p
+            case PHANTOM_4_ADVANCED: // p4p
                 switch (width) {
                     case 1280:
                         iframeId = R.raw.iframe_p4p_720_16x9;
@@ -273,13 +314,32 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                     case 1344:
                         iframeId = R.raw.iframe_p4p_1344x720;
                         break;
+                    case 1440:
+                        iframeId = dji.midware.R.raw.iframe_1440x1088_wm620;
+                        break;
+                    case 1920:
+                        switch (height) {
+                            case 1024:
+                                iframeId = dji.midware.R.raw.iframe_1920x1024_wm620;
+                                break;
+                            case 800:
+                                iframeId = dji.midware.R.raw.iframe_1920x800_wm620;
+                                break;
+                            default:
+                                iframeId = dji.midware.R.raw.iframe_1920x1088_wm620;
+                                break;
+                        }
+                        break;
                     default:
                         iframeId = R.raw.iframe_p4p_720_16x9;
                         break;
                 }
                 break;
+            case MATRICE_200:
+            case MATRICE_210:
+            case MATRICE_210_RTK:
             case INSPIRE_2: //inspire2
-                DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType();
+                DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType(0);
                 if(cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeGD600) {
                     iframeId = R.raw.iframe_1080x720_gd600;
                 } else {
@@ -308,6 +368,12 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                     } else if (width == 1344 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1344x720_wm620");
                         iframeId = R.raw.iframe_1344x720_wm620;
+                    } else if (width == 1440 && height == 1088) {
+                        DJILog.i(TAG, "Selected Iframe=iframe_1440x1088_wm620");
+                        iframeId = dji.midware.R.raw.iframe_1440x1088_wm620;
+                    } else if (width == 1632 && height == 1080){
+                        DJILog.i(TAG, "Selected Iframe=iframe_1632x1080_wm620");
+                        iframeId = dji.midware.R.raw.iframe_1632x1080_wm620;
                     } else if (width == 1760 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1760x720_wm620");
                         iframeId = R.raw.iframe_1760x720_wm620;
@@ -401,9 +467,6 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             codec.start();
         } catch (Exception e) {
             loge("init codec failed, do it again: " + e);
-            if (e instanceof MediaCodec.CodecException) {
-                MediaCodec.CodecException ce = (MediaCodec.CodecException) e;
-            }
             e.printStackTrace();
         }
     }
@@ -457,9 +520,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         }
                         break;
                     case MSG_YUV_DATA:
-                        if (yuvDataListener != null) {
-                            yuvDataListener.onYuvDataReceived((byte[])msg.obj, msg.arg1, msg.arg2);
-                        }
+
                         break;
                     default:
                         break;
@@ -644,14 +705,9 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                     ByteBuffer yuvDataBuf = codec.getOutputBuffer(outIndex);
                     yuvDataBuf.position(bufferInfo.offset);
                     yuvDataBuf.limit(bufferInfo.size - bufferInfo.offset);
-                    byte[] bytes = new byte[bufferInfo.size - bufferInfo.offset];
-                    yuvDataBuf.get(bytes);
-                    Message message = dataHandler.obtainMessage();
-                    message.obj = bytes;
-                    message.arg1 = width;
-                    message.arg2 = height;
-                    message.what = MSG_YUV_DATA;
-                    dataHandler.sendMessage(message);
+                    if (yuvDataListener != null) {
+                        yuvDataListener.onYuvDataReceived(yuvDataBuf, bufferInfo.size - bufferInfo.offset,  width, height);
+                    }
                 }
                 // All the output buffer must be release no matter whether the yuv data is output or
                 // not, so that the codec can reuse the buffer.

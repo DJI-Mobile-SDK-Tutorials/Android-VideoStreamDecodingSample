@@ -58,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="430dp"
-        android:text="@string/sdk_version"
         android:textSize="15dp"
         android:id="@+id/textView2" />
 
