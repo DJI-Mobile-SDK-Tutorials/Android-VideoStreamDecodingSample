@@ -71,43 +71,6 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
     private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
     private List<String> missingPermission = new ArrayList<>();
 
-
-    private BaseComponent.ComponentListener mDJIComponentListener = new BaseComponent.ComponentListener() {
-
-        @Override
-        public void onConnectivityChange(boolean isConnected) {
-            Log.d(TAG, "onComponentConnectivityChanged: " + isConnected);
-            notifyStatusChange();
-        }
-    };
-    private BaseProduct.BaseProductListener mDJIBaseProductListener = new BaseProduct.BaseProductListener() {
-
-        @Override
-        public void onComponentChange(BaseProduct.ComponentKey key,
-                                      BaseComponent oldComponent,
-                                      BaseComponent newComponent) {
-
-            if (newComponent != null) {
-                newComponent.setComponentListener(mDJIComponentListener);
-            }
-            Log.d(TAG,
-                    String.format("onComponentChange key:%s, oldComponent:%s, newComponent:%s",
-                            key,
-                            oldComponent,
-                            newComponent));
-
-            notifyStatusChange();
-        }
-
-        @Override
-        public void onConnectivityChange(boolean isConnected) {
-
-            Log.d(TAG, "onProductConnectivityChanged: " + isConnected);
-
-            notifyStatusChange();
-        }
-    };
-
     //region Registration n' Permissions Helpers
 
     /**
@@ -144,12 +107,6 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                                 DJILog.e("App registration", DJISDKError.REGISTRATION_SUCCESS.getDescription());
                                 DJISDKManager.getInstance().startConnectionToProduct();
                                 showToast("Register SDK Success");
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        loginDJIUserAccount();
-                                    }
-                                });
                             } else {
                                 showToast("Register sdk fails, check network is available");
                             }
@@ -158,15 +115,48 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                         }
 
                         @Override
-                        public void onProductChange(BaseProduct oldProduct, BaseProduct newProduct) {
-                            Log.d(TAG, String.format("onProductChanged oldProduct:%s, newProduct:%s", oldProduct, newProduct));
+                        public void onProductDisconnect() {
+                            Log.d(TAG, "onProductDisconnect");
+                            showToast("Product Disconnected");
                             notifyStatusChange();
-                            isRegistrationInProgress.set(false);
-                            if (newProduct != null) {
-                                newProduct.setBaseProductListener(mDJIBaseProductListener);
-                                VideoDecodingApplication.updateProduct(newProduct);
-                            }
                         }
+                        @Override
+                        public void onProductConnect(BaseProduct baseProduct) {
+                            Log.d(TAG, String.format("onProductConnect newProduct:%s", baseProduct));
+                            showToast("Product Connected");
+                            notifyStatusChange();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginDJIUserAccount();
+                                }
+                            });
+                        }
+                        @Override
+                        public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,
+                                                      BaseComponent newComponent) {
+
+                            if (newComponent != null) {
+                                newComponent.setComponentListener(new BaseComponent.ComponentListener() {
+
+                                    @Override
+                                    public void onConnectivityChange(boolean isConnected) {
+                                        Log.d(TAG, "onComponentConnectivityChanged: " + isConnected);
+                                        notifyStatusChange();
+                                    }
+                                });
+                            }
+
+                            notifyStatusChange();
+
+                            Log.d(TAG,
+                                    String.format("onComponentChange key:%s, oldComponent:%s, newComponent:%s",
+                                            componentKey,
+                                            oldComponent,
+                                            newComponent));
+
+                        }
+
                     });
                 }
             });
@@ -258,34 +248,27 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
         mBtnOpen = (Button) findViewById(R.id.btn_open);
         mBtnOpen.setOnClickListener(this);
         mBtnOpen.setEnabled(false);
-        ((TextView)findViewById(R.id.textView2)).setText(DJISDKManager.getInstance().getSDKVersion());
+        ((TextView)findViewById(R.id.textView2)).setText(getResources().getString(R.string.sdk_version, DJISDKManager.getInstance().getSDKVersion()));
 
     }
 
     private void updateTitleBar() {
-        boolean ret = false;
         BaseProduct product = VideoDecodingApplication.getProductInstance();
         if (product != null) {
             if (product.isConnected()) {
                 //The product is connected
                 showToast(VideoDecodingApplication.getProductInstance().getModel() + " Connected");
-                ret = true;
             } else {
                 if (product instanceof Aircraft) {
                     Aircraft aircraft = (Aircraft) product;
                     if (aircraft.getRemoteController() != null && aircraft.getRemoteController().isConnected()) {
                         // The product is not connected, but the remote controller is connected
                         showToast("only RC Connected");
-                        ret = true;
                     }
                 }
             }
         }
 
-        if (!ret) {
-            // The product or the remote controller are not connected.
-            showToast("Disconnected");
-        }
     }
 
     public void showToast(final String msg) {
