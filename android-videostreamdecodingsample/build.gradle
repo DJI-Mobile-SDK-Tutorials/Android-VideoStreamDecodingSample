@@ -1,3 +1,5 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     repositories {
         jcenter()
@@ -5,9 +7,11 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
-apply plugin: 'com.android.application'
 
 allprojects {
     repositories {
@@ -15,46 +19,7 @@ allprojects {
         google()
     }
 }
-android {
-    compileSdkVersion 24
-    buildToolsVersion '27.0.3'
 
-    defaultConfig {
-        applicationId "com.dji.videostreamdecodingsample"
-        minSdkVersion 16
-        targetSdkVersion 24
-        multiDexEnabled true
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        main {
-            jniLibs.srcDir 'libs'
-        }
-    }
-
-    packagingOptions{
-        doNotStrip "*/*/libdjivideo.so"
-        doNotStrip "*/*/libSDKRelativeJNI.so"
-        doNotStrip "*/*/libFlyForbid.so"
-        doNotStrip "*/*/libduml_vision_bokeh.so"
-        doNotStrip "*/*/libyuv2.so"
-        doNotStrip "*/*/libGroudStation.so"
-        doNotStrip "*/*/libFRCorkscrew.so"
-        doNotStrip "*/*/libUpgradeVerify.so"
-        doNotStrip "*/*/libFR.so"
-        exclude 'META-INF/rxjava.properties'
-    }
-}
-
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.dji:dji-sdk:4.6'
-    provided 'com.dji:dji-sdk-provided:4.6'
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
