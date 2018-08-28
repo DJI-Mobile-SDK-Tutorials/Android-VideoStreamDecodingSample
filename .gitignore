@@ -8,6 +8,13 @@
 # Java class files
 *.class
 
+# Gradle files
+android-videostreamdecodingsample/.gradle/
+android-videostreamdecodingsample/gradle/
+android-videostreamdecodingsample/build/
+android-videostreamdecodingsample/gradlew
+android-videostreamdecodingsample/gradlew.bat
+
 # generated files
 
 /bin
