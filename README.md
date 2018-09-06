@@ -8,7 +8,7 @@ This sample code demonstrates how to use [FFmpeg](https://ffmpeg.org) for video 
 
  - Android Studio 2.0+
  - Android System 4.2+
- - DJI Android SDK 4.7
+ - DJI Android SDK 4.7.1
 
 ## IMPORTANT: Install `git lfs`
 
