@@ -244,8 +244,7 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
         mBtnOpen = (Button) findViewById(R.id.btn_open);
         mBtnOpen.setOnClickListener(this);
         mBtnOpen.setEnabled(false);
-        ((TextView)findViewById(R.id.textView2)).setText(DJISDKManager.getInstance().getSDKVersion());
-
+        ((TextView)findViewById(R.id.textView2)).setText(getResources().getString(R.string.sdk_version, DJISDKManager.getInstance().getSDKVersion()));
     }
 
     private void updateTitleBar() {

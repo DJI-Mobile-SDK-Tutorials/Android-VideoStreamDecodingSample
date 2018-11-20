@@ -151,9 +151,9 @@ MERGED from [android.arch.lifecycle:runtime:1.0.0] /Users/zlinoliver/.gradle/cac
 	android:name
 		ADDED from /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/src/main/AndroidManifest.xml:31:9-49
 meta-data#com.dji.sdk.API_KEY
-ADDED from /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/src/main/AndroidManifest.xml:37:9-39:55
+ADDED from /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/src/main/AndroidManifest.xml:37:9-39:62
 	android:value
-		ADDED from /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/src/main/AndroidManifest.xml:39:13-53
+		ADDED from /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/src/main/AndroidManifest.xml:39:13-60
 	android:name
 		ADDED from /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/src/main/AndroidManifest.xml:38:13-47
 activity#com.dji.videostreamdecodingsample.ConnectionActivity
