@@ -1,0 +1,3 @@
+# Referenced at /Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/build/intermediates/manifests/full/debug/AndroidManifest.xml:54
+-keep class com.dji.videostreamdecodingsample.VideoDecodingApplication { <init>(...); }
+

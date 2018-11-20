@@ -218,15 +218,31 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
         switch(pModel) {
             case PHANTOM_3_ADVANCED:
             case PHANTOM_3_STANDARD:
-                if (width==960) {
+                if (width == 960) {
                     //for photo mode, 960x720, GDR
                     iframeId = R.raw.iframe_960x720_3s;
+                } else if (width == 640){
+                    iframeId = R.raw.iframe_640x368_osmo_gop;
                 } else {
                     //for record mode, 1280x720, GDR
                     iframeId = R.raw.iframe_1280x720_3s;
                 }
                 break;
-
+            case INSPIRE_1: {
+                DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType();
+                if (cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeCV600) { //ZENMUSE_Z3
+                    if (width == 960) {
+                        //for photo mode, 960x720, GDR
+                        iframeId = R.raw.iframe_960x720_3s;
+                    } else if (width == 640){
+                        iframeId = R.raw.iframe_640x368_osmo_gop;
+                    } else {
+                        //for record mode, 1280x720, GDR
+                        iframeId = R.raw.iframe_1280x720_3s;
+                    }
+                }
+                break;
+            }
             case Phantom_3_4K:
                 switch(width) {
                     case 640:
@@ -237,6 +253,14 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         //for P3-4K with resolution 848*480
                         iframeId = R.raw.iframe_848x480;
                         break;
+                    case 896:
+                        iframeId = R.raw.iframe_896x480;
+                        break;
+                    case 960:
+                        //DJILog.i(TAG, "Selected Iframe=iframe_960x720_3s");
+                        //for photo mode, 960x720, GDR
+                        iframeId = R.raw.iframe_960x720_3s;
+                        break;
                     default:
                         iframeId = R.raw.iframe_1280x720_3s;
                         break;
@@ -246,26 +270,31 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                 if (DataCameraGetPushStateInfo.getInstance().getVerstion() >= 4) {
                     iframeId = -1;
                 } else {
-                    iframeId = dji.midware.R.raw.iframe_1280x720_ins;
+                    iframeId = R.raw.iframe_1280x720_ins;
                 }
                 break;
             case OSMO_PLUS:
-                if (width == 960)
-                {
-                    iframeId = R.raw.iframe_960x720_3s;
-                }else if(width == 640){
-                    iframeId = R.raw.iframe_640x480;
+                if (width == 960) {
+                    iframeId = R.raw.iframe_960x720_osmo_gop;
+                } else if (width==1280) {
+                    //for record mode, 1280x720, GDR
+                    //DJILog.i(TAG, "Selected Iframe=iframe_1280x720_3s");
+                    //                    iframeId = R.raw.iframe_1280x720_3s;
+                    iframeId = R.raw.iframe_1280x720_osmo_gop;
+                } else if (width == 640){
+                    iframeId = R.raw.iframe_640x368_osmo_gop;
                 } else {
                     iframeId = R.raw.iframe_1280x720_3s;
                 }
                 break;
             case OSMO_PRO:
             case OSMO_RAW:
-                iframeId = dji.midware.R.raw.iframe_1280x720_ins;
+                iframeId = R.raw.iframe_1280x720_ins;
                 break;
             case MAVIC_PRO: //product small drone
+            case MAVIC_2:
                 if (((Aircraft) DJISDKManager.getInstance().getProduct()).getMobileRemoteController() != null) {
-                    iframeId = dji.midware.R.raw.iframe_1280x720_wm220;
+                    iframeId = R.raw.iframe_1280x720_wm220;
                 } else{
                     iframeId = -1;
                 }
@@ -273,13 +302,13 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             case Spark:
                 switch (width) {
                     case 1280:  // 与P4相同
-                        iframeId = dji.midware.R.raw.iframe_1280x720_p4;
+                        iframeId = R.raw.iframe_1280x720_p4;
                         break;
                     case 1024:
-                        iframeId = dji.midware.R.raw.iframe_1024x768_wm100;
+                        iframeId = R.raw.iframe_1024x768_wm100;
                         break;
                     default:
-                        iframeId = dji.midware.R.raw.iframe_1280x720_p4;
+                        iframeId = R.raw.iframe_1280x720_p4;
                         break;
                 }
                 break;
@@ -315,18 +344,18 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         iframeId = R.raw.iframe_p4p_1344x720;
                         break;
                     case 1440:
-                        iframeId = dji.midware.R.raw.iframe_1440x1088_wm620;
+                        iframeId = R.raw.iframe_1440x1088_wm620;
                         break;
                     case 1920:
                         switch (height) {
                             case 1024:
-                                iframeId = dji.midware.R.raw.iframe_1920x1024_wm620;
+                                iframeId = R.raw.iframe_1920x1024_wm620;
                                 break;
                             case 800:
-                                iframeId = dji.midware.R.raw.iframe_1920x800_wm620;
+                                iframeId = R.raw.iframe_1920x800_wm620;
                                 break;
                             default:
-                                iframeId = dji.midware.R.raw.iframe_1920x1088_wm620;
+                                iframeId = R.raw.iframe_1920x1088_wm620;
                                 break;
                         }
                         break;
@@ -335,6 +364,51 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         break;
                 }
                 break;
+            case MATRICE_600:
+            case MATRICE_600_PRO: {
+                DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType();
+                if (width == 720 && height == 480) {
+                    iframeId = R.raw.iframe_720x480_m600;
+                } else if (width == 720 && height == 576) {
+                    iframeId = R.raw.iframe_720x576_m600;
+                } else {
+                    if (width == 1280 && height == 720) {
+                        if (cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeGD600) {
+                            iframeId = R.raw.iframe_gd600_1280x720;
+                        } else if (cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeCV600) {
+                            iframeId = R.raw.iframe_1280x720_osmo_gop;
+                        } else if (cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeFC350) {
+                            iframeId = R.raw.iframe_1280x720_ins;
+                        } else {
+                            iframeId = R.raw.iframe_1280x720_m600;
+                        }
+                    } else if (width == 1920 && (height == 1080 || height == 1088)) {
+                        iframeId = R.raw.iframe_1920x1080_m600;
+                    } else if (width == 1080 && height == 720) {
+                        iframeId = R.raw.iframe_1080x720_gd600;
+                    } else if (width == 960 && height == 720) {
+                        iframeId = R.raw.iframe_960x720_3s;
+                    } else {
+                        iframeId = -1;
+                    }
+                }
+                break;
+            }
+            case MATRICE_100: {
+                DataCameraGetPushStateInfo.CameraType cameraType = DataCameraGetPushStateInfo.getInstance().getCameraType();
+                if (cameraType == DataCameraGetPushStateInfo.CameraType.DJICameraTypeGD600) {
+
+                    if (width == 1280 && height == 720){
+                        iframeId = R.raw.iframe_gd600_1280x720;
+                    }else {
+                        iframeId = R.raw.iframe_1080x720_gd600;
+                    }
+
+                } else {
+                    iframeId = R.raw.iframe_1280x720_ins;
+                }
+                break;
+            }
             case MATRICE_200:
             case MATRICE_210:
             case MATRICE_210_RTK:
@@ -359,6 +433,9 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                     } else if (width == 1080 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1080x720_wm620");
                         iframeId = R.raw.iframe_1080x720_wm620;
+                    } else if (width == 1088 && height == 720) {
+                        DJILog.i(TAG, "Selected Iframe=iframe_1088x720_wm620");
+                        iframeId = R.raw.iframe_1088x720_wm620;
                     } else if (width == 960 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_960x720_wm620");
                         iframeId = R.raw.iframe_960x720_wm620;
@@ -370,10 +447,10 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         iframeId = R.raw.iframe_1344x720_wm620;
                     } else if (width == 1440 && height == 1088) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1440x1088_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1440x1088_wm620;
+                        iframeId = R.raw.iframe_1440x1088_wm620;
                     } else if (width == 1632 && height == 1080){
                         DJILog.i(TAG, "Selected Iframe=iframe_1632x1080_wm620");
-                        iframeId = dji.midware.R.raw.iframe_1632x1080_wm620;
+                        iframeId = R.raw.iframe_1632x1080_wm620;
                     } else if (width == 1760 && height == 720) {
                         DJILog.i(TAG, "Selected Iframe=iframe_1760x720_wm620");
                         iframeId = R.raw.iframe_1760x720_wm620;
@@ -391,6 +468,11 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                         iframeId = R.raw.iframe_1920x1440_wm620;
                     }
                 }
+                break;
+            case PHANTOM_4_PRO_V2:
+            case PHANTOM_4_RTK: {
+                iframeId = -1;
+            }
                 break;
             default: //for P3P, Inspire1, etc/
                 iframeId = R.raw.iframe_1280x720_ins;

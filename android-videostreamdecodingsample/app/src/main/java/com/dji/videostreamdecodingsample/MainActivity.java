@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
     private VideoFeeder.VideoFeed standardVideoFeeder;
 
 
-    protected VideoFeeder.VideoDataCallback mReceivedVideoDataCallBack = null;
+    protected VideoFeeder.VideoDataListener mReceivedVideoDataListener = null;
     private TextView titleTv;
     public Handler mainHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -115,10 +115,10 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
     protected void onPause() {
         if (mCamera != null) {
             if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
-                VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(null);
+                VideoFeeder.getInstance().getPrimaryVideoFeed().removeVideoDataListener(mReceivedVideoDataListener);
             }
             if (standardVideoFeeder != null) {
-                standardVideoFeeder.setCallback(null);
+                standardVideoFeeder.removeVideoDataListener(mReceivedVideoDataListener);
             }
         }
         super.onPause();
@@ -212,7 +212,7 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
         }
 
         // The callback for receiving the raw H264 video data for camera live view
-        mReceivedVideoDataCallBack = new VideoFeeder.VideoDataCallback() {
+        mReceivedVideoDataListener = new VideoFeeder.VideoDataListener() {
 
             @Override
             public void onReceive(byte[] videoBuffer, int size) {
@@ -262,11 +262,11 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                 if (demoType == DemoType.USE_SURFACE_VIEW_DEMO_DECODER) {
                     if (VideoFeeder.getInstance() != null) {
                         standardVideoFeeder = VideoFeeder.getInstance().provideTranscodedVideoFeed();
-                        standardVideoFeeder.setCallback(mReceivedVideoDataCallBack);
+                        standardVideoFeeder.addVideoDataListener(mReceivedVideoDataListener);
                     }
                 } else {
                     if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
-                        VideoFeeder.getInstance().getPrimaryVideoFeed().setCallback(mReceivedVideoDataCallBack);
+                        VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(mReceivedVideoDataListener);
                     }
                 }
             }

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"瀏覽首頁"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"向上瀏覽"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"更多選項"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"完成"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"查看全部"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"選擇應用程式"</string>
+    <string msgid="121134116657445385" name="abc_capital_off">"關閉"</string>
+    <string msgid="3405795526292276155" name="abc_capital_on">"開啟"</string>
+    <string msgid="7723749260725869598" name="abc_search_hint">"搜尋…"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"清除查詢"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"搜尋查詢"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"搜尋"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"提交查詢"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"語音搜尋"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"選擇分享對象"</string>
+    <string msgid="3300176832234831527" name="abc_shareactionprovider_share_with_application">"與「<ns1:g id="APPLICATION_NAME">%s</ns1:g>」分享"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"收合"</string>
+    <string name="flight_forbid_warn_alert_txt">飛行器處於警告區(%s)內，請注意飛行安全。</string>
+    <string name="flight_forbid_warn_edge_alert_txt">你已抵達警告區(%s)邊緣，請注意飛行安全。</string>
+    <string name="flight_frb_new_around_frb">附近有禁飛區，存在飛行限制。\n禁飛區為：%s\n觸碰該區域，可能會導致自動返航中斷並懸停，或退出智能飛行任務。請注意飛行安全</string>
+    <string name="flight_frb_new_around_limit">附近有限飛區，存在飛行限制。\n觸碰這些區域，可能會導致自動返航中斷並懸停，或退出智能飛行任務。請注意飛行安全</string>
+    <string name="flight_frb_new_around_limit_height">附近有限高區（%1$d米），存在飛行限制。\n限高區為：%2$s\n觸碰該區域，可能會導致自動返航中斷並懸停，或退出智能飛行任務。請注意飛行安全。</string>
+    <string name="flight_frb_new_around_to_open_license">附近有 %1$d 個授權區，你已獲得飛行證書。\n授權區為：%2$s\n確認開啟請勾選：</string>
+    <string name="flight_frb_new_around_to_unlock">附近有 %1$d 個授權區，存在飛行限制。\n授權區為：%2$s\n返航或執行智能飛行任務時，飛行器可能會因為觸碰到授權區而退出任務（懸停）。\n是否需要解鎖這些區域？</string>
+    <string name="flight_frb_new_below_limit_height">飛行器在限高區（%d米）下方，請注意飛行安全。</string>
+    <string name="flight_frb_new_enhance_warning">飛行器在加強警告區（%s）內，請注意飛行安全。\n確認繼續飛行請勾選：</string>
+    <string name="flight_frb_new_in_auth_no_license">你在授權區內，解鎖前無法起飛。\n授權區為：%s\n是否需要解鎖此區域？</string>
+    <string name="flight_frb_new_in_auth_with_license">飛行器在授權區內，你已獲得飛行證書。\n授權區為：%s\n確認開啟請勾選：</string>
+    <string name="flight_frb_new_limit_height_lose_gps">丟星，限高%d米。</string>
+    <string name="flight_frb_new_seem_in_auth_no_license">移動設備在授權區內，且飛行器GPS信號不佳，解鎖前無法起飛。\n授權區為：%s\n是否需要解鎖此區域？</string>
+    <string name="flight_frb_new_touch_to_open_license">飛行器已觸碰到授權區，你已獲得飛行證書。\n授權區為：%s\n確認開啟請勾選：</string>
+    <string name="flight_record_sync_del_result">删除失敗數目：%d</string>
+    <string name="flight_record_sync_download_result">下載失敗數目：%d</string>
+    <string name="flight_record_sync_fail">同步飛行記錄失敗！</string>
+    <string name="flight_record_sync_upload_result">上傳失敗數目：%d</string>
+    <string name="fr_sync_result_canceled">用戶取消同步飛行記錄</string>
+    <string name="fr_sync_result_del_completed">同步本地删除檔案資訊成功</string>
+    <string name="fr_sync_result_del_failed">同步本地删除檔案資訊失敗，錯誤碼:%1$d，返回碼:%2$d，錯誤資訊:%3$s</string>
+    <string name="fr_sync_result_del_start">開始同步本地删除檔案資訊到服務器，個數爲%d</string>
+    <string name="fr_sync_result_downloadfile_failed">下載檔案%1$s失敗，錯誤碼:%2$d，返回碼:%3$d，錯誤資訊:%4$s</string>
+    <string name="fr_sync_result_failed">同步飛行記錄失敗，錯誤碼:%d</string>
+    <string name="fr_sync_result_finished">同步飛行記錄完成</string>
+    <string name="fr_sync_result_getlist_failed">獲取檔案列錶失敗，頁數:%1$d，錯誤碼:%2$d，返回碼:%3$d，錯誤資訊:%4$s</string>
+    <string name="fr_sync_result_getlist_success">獲取檔案列錶成功，頁數爲%d</string>
+    <string name="fr_sync_result_opt_param">上傳個數:%1$d，下載個數:%2$d，更新個數:%3$d</string>
+    <string name="fr_sync_result_overview_failed">獲取總數據失敗，錯誤碼:%1$d，返回碼:%2$d，錯誤資訊:%3$s</string>
+    <string name="fr_sync_result_start">開始同步飛行記錄，帳號郵箱爲：%s</string>
+    <string name="fr_sync_result_uploadfile_failed">上傳檔案%1$s失敗，錯誤碼:%2$d，返回碼:%3$d，錯誤資訊:%4$s</string>
+    <string name="limit_tips_touch">飛行器已觸碰到禁飛區，請儘快操控飛行器遠離。</string>
+    <string name="limit_tips_touch_auth">飛行器已觸碰到授權區，請儘快操控飛行器遠離。</string>
+    <string name="limit_tips_touch_limit_height">飛行器已觸碰到限高區，請儘快操控飛行器遠離。</string>
+    <string name="limit_tips_touch_special_unlock">飛行器已觸碰特殊解禁區域邊緣。</string>
+    <string name="nfz_fly_zone_airport">機場</string>
+    <string name="nfz_fly_zone_airports_commercial">商業機場</string>
+    <string name="nfz_fly_zone_airports_commercial_private">商業機場</string>
+    <string name="nfz_fly_zone_airports_recreational">休閑型機場</string>
+    <string name="nfz_fly_zone_airports_recreational_private">私人休閑機場</string>
+    <string name="nfz_fly_zone_class_b">Class B</string>
+    <string name="nfz_fly_zone_class_c">Class C</string>
+    <string name="nfz_fly_zone_class_d">Class D</string>
+    <string name="nfz_fly_zone_class_e0">Class E</string>
+    <string name="nfz_fly_zone_heliports">直升機場</string>
+    <string name="nfz_fly_zone_military">軍事區域</string>
+    <string name="nfz_fly_zone_national_parks">國家公園</string>
+    <string name="nfz_fly_zone_noaa">NOAA</string>
+    <string name="nfz_fly_zone_nuclear_power_plant">核電廠</string>
+    <string name="nfz_fly_zone_parcels">地塊</string>
+    <string name="nfz_fly_zone_power_plants">發電廠</string>
+    <string name="nfz_fly_zone_prisons">監獄</string>
+    <string name="nfz_fly_zone_schools">學校</string>
+    <string name="nfz_fly_zone_stadiums">體育場</string>
+    <string name="nfz_fly_zone_sua_prhobited">空中禁區</string>
+    <string name="nfz_fly_zone_sua_restricted">空中禁區</string>
+    <string name="nfz_fly_zone_tfrs">臨時飛行限制</string>
+    <string name="nfz_fly_zone_unpaved_airports">未鋪砌的機場</string>
+    <string name="nfz_fly_zone_warning">特殊</string>
+    <string name="nfz_http_request_area_cannot_unlock_error_prompt">該區域不可解禁。\n（錯誤碼：%d）</string>
+    <string name="nfz_http_request_error_common_prompt">請求失敗，請聯繫售後處理。\n（錯誤碼：%d）</string>
+    <string name="nfz_http_request_token_error_prompt">身份信息無效，請重新登錄。\n（錯誤碼：%d）</string>
+    <string name="nfz_http_request_too_more_license_error_prompt">解禁證書數量超過上限。\n（錯誤碼：%d）</string>
+    <string name="nfz_http_request_too_more_unlock_error_prompt">解禁區域數量超過上限。\n（錯誤碼：%d）</string>
+    <string name="nfz_http_request_verify_error_prompt">身份未驗證，請先進行驗證。\n（錯誤碼：%d）</string>
+    <string name="nfz_server_error_account_format">賬號格式錯誤</string>
+    <string name="nfz_server_error_format">輸入格式錯誤</string>
+    <string name="nfz_server_error_not_allow_unlimit">該限飛區不允許解禁。</string>
+    <string name="nfz_server_error_parameter">請輸入參數。</string>
+    <string name="nfz_server_error_signature">簽名錯誤</string>
+    <string name="nfz_server_error_sn_empty">SN號獲取錯誤</string>
+    <string name="nfz_server_error_system_busy">系統錯誤</string>
+    <string name="nfz_server_error_too_frequent">請10秒後再試。</string>
+    <string name="nfz_server_error_too_more_unlimit">解禁區域過多，請刪除後重試。</string>
+    <string name="nfz_server_error_user_not_verify">用戶認證未通過</string>
+    <string name="nfz_unlimit_fail_toast_txt">解禁失敗，錯誤碼：</string>
+    <string name="nfz_unlock_desc_radius">半徑</string>
+    <string name="nfz_unlock_new_unlock_type_country">國家解禁</string>
+    <string name="nfz_unlock_new_unlock_type_geo">授權區解禁</string>
+    <string name="nfz_unlock_new_unlock_type_height">解除限高</string>
+    <string name="nfz_unlock_new_unlock_type_polygon">特殊解禁(多邊形)</string>
+    <string name="nfz_unlock_new_unlock_type_whitelist">特殊解禁(圓形)</string>
+    <string name="nfz_unlock_special_polygon_desc">多邊形範圍內</string>
+    <string name="nfz_unlock_v3_app_license_too_old">當前APP解禁證書版本低於固件要求，請保持移動設備聯網並刷新。</string>
+    <string name="nfz_unlock_v3_app_license_too_old_dynamic">解禁證書版本錯誤。</string>
+    <string name="nfz_unlock_v3_error_code">錯誤碼：</string>
+    <string name="nfz_unlock_v3_error_keyversion_not_got">與飛行器通信異常，無法正常解禁該區域。</string>
+    <string name="nfz_unlock_v3_error_keyversion_not_got_importing">與飛行器通信異常，無法正常導入解禁證書。</string>
+    <string name="nfz_unlock_v3_license_open_fail_user_not_match">用戶驗證失敗</string>
+    <string name="nfz_unlock_v3_uav_license_too_old">當前飛機固件版本不支持該解禁證書。請前往固件升級頁面更新至最新固件。</string>
+    <string name="nfz_unlock_view_map">查看地圖</string>
+    <string name="offline_map_all_pausing_text">地圖下載全部停止中...</string>
+    <string name="offline_map_all_upgrade">全部更新</string>
+    <string name="offline_map_cancel_text">取消</string>
+    <string name="offline_map_cancelled_text">已取消</string>
+    <string name="offline_map_confirm_text">確定</string>
+    <string name="offline_map_delete_text">地圖刪除中...</string>
+    <string name="offline_map_download_all_cities">所有城市</string>
+    <string name="offline_map_download_all_countries">所有國家</string>
+    <string name="offline_map_download_all_regions">所有地區</string>
+    <string name="offline_map_download_invalid">已損壞</string>
+    <string name="offline_map_download_pause">已暫停</string>
+    <string name="offline_map_download_successfully">下載完成</string>
+    <string name="offline_map_download_text">DJI GO 離線地圖下載</string>
+    <string name="offline_map_downloaded">離線地圖下載完成</string>
+    <string name="offline_map_downloaded_text">已下載</string>
+    <string name="offline_map_downloading">離線地圖下載中</string>
+    <string name="offline_map_downloading_text">正在下載</string>
+    <string name="offline_map_get_offlinecity_list">正在獲取離線城市列表</string>
+    <string name="offline_map_gps_location_off">當前GPS定位不可用，是否跳轉到設置頁面改變設置？</string>
+    <string name="offline_map_header_bar_management_title">離線地圖列表</string>
+    <string name="offline_map_header_bar_title">離線地圖下載</string>
+    <string name="offline_map_hint_no_satellite_map">由於在沒有網絡情況下不能使用衛星地圖，離線地圖只能提供普通地圖，不能提供衛星地圖。</string>
+    <string name="offline_map_manager_all_download">全部下載</string>
+    <string name="offline_map_manager_all_pause">全部暫停</string>
+    <string name="offline_map_manager_all_upgrade">全部更新</string>
+    <string name="offline_map_manager_download">下載</string>
+    <string name="offline_map_manager_empty_message">暫時沒有離線區域</string>
+    <string name="offline_map_mapbox_downloading_region">正在下載 %1$s (%2$d%%)</string>
+    <string name="offline_map_mapbox_select_region_download">選擇你要下載的地區</string>
+    <string name="offline_map_mapbox_tile_count_limit_exceeded">離線地圖容量達到限制，請先刪除一部分地圖，再恢復下載</string>
+    <string name="offline_map_multiple_region_downloading_warning">多個地圖同時下載</string>
+    <string name="offline_map_multiple_region_downloading_warning_content">請先完成其他下載任務後，再下載此區域</string>
+    <string name="offline_map_name_new_region_title">命名這個新地區</string>
+    <string name="offline_map_network_disconnected">當前網絡未連接</string>
+    <string name="offline_map_network_disconnected_hint">請檢查當前網絡</string>
+    <string name="offline_map_network_exception">下載異常，請檢查是否已經連接網絡</string>
+    <string name="offline_map_network_type_in_mobile">當前網絡是移動網絡</string>
+    <string name="offline_map_network_type_in_mobile_hint">是否確定繼續在移動網絡下下載</string>
+    <string name="offline_map_pause_text">暫停中</string>
+    <string name="offline_map_pausing_text">地圖下載暫停中...</string>
+    <string name="offline_map_region_default_name">地區%d</string>
+    <string name="offline_map_region_list_item_menu_cancel">取消</string>
+    <string name="offline_map_region_list_item_menu_delete">刪除</string>
+    <string name="offline_map_region_list_item_menu_pause">暫停</string>
+    <string name="offline_map_region_list_item_menu_rename">重命名</string>
+    <string name="offline_map_region_list_item_menu_resume">繼續</string>
+    <string name="offline_map_region_name">該地區名字</string>
+    <string name="offline_map_region_name_cannot_be_empty">地區名不能為空</string>
+    <string name="offline_map_region_name_input_hint">請輸入地區名字</string>
+    <string name="offline_map_search_hint_text">輸入城市名稱或拼音字母</string>
+    <string name="offline_map_search_no_data_hint">沒有找到相關數據</string>
+    <string name="offline_map_server_no_response">服務器無響應</string>
+    <string name="offline_map_setting">設置</string>
+    <string name="offline_map_storage_space">當前移動設備可使用的存儲空間:</string>
+    <string name="offline_map_storage_space_no_enough">手機存儲不足</string>
+    <string name="offline_map_storage_space_no_enough_hint">請檢查當前的存儲狀態</string>
+    <string name="offline_map_storage_space_no_enough_resume_download">是否繼續下載？</string>
+    <string name="offline_map_tips">提示</string>
+    <string name="offline_map_unzip_text">解壓中</string>
+    <string name="offline_map_upgrade_text">有更新</string>
+    <string name="offline_map_waitting_text">等待中</string>
+    <string msgid="146198913615257606" name="search_menu_title">"搜尋"</string>
+    <string name="setting_ui_flyfrb_unlock_refresh_empty">解禁列表為空</string>
+    <string name="setting_ui_flyfrb_unlock_refresh_fail">解禁列表刷新失敗，請重試。</string>
+    <string name="setting_ui_flyfrb_unlock_refresh_success">解禁列表刷新成功</string>
+    <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="v2_nfz_unlock_white_list_type">白名單</string>
+    <string name="zxing_app_name">條碼掃描器</string>
+    <string name="zxing_button_ok">確定</string>
+    <string name="zxing_msg_camera_framework_bug">很抱歉，Android 相機出現問題，您可能需要重新啟動您的裝置。</string>
+    <string name="zxing_msg_default_status">將條碼置於鏡頭範圍內以進行掃描。</string>
+</resources>

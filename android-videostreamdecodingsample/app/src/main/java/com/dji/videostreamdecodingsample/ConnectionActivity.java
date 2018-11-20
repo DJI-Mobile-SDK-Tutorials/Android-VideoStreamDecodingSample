@@ -244,7 +244,7 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
         mBtnOpen = (Button) findViewById(R.id.btn_open);
         mBtnOpen.setOnClickListener(this);
         mBtnOpen.setEnabled(false);
-        ((TextView)findViewById(R.id.textView2)).setText("DJI SDK Version: " + DJISDKManager.getInstance().getSDKVersion());
+        ((TextView)findViewById(R.id.textView2)).setText(DJISDKManager.getInstance().getSDKVersion());
 
     }
 

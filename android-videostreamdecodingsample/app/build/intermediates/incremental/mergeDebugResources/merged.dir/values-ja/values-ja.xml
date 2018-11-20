@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="4600421777120114993" name="abc_action_bar_home_description">"ホームへ移動"</string>
+    <string msgid="1594238315039666878" name="abc_action_bar_up_description">"上へ移動"</string>
+    <string msgid="3588849162933574182" name="abc_action_menu_overflow_description">"その他のオプション"</string>
+    <string msgid="4076576682505996667" name="abc_action_mode_done">"完了"</string>
+    <string msgid="7468859129482906941" name="abc_activity_chooser_view_see_all">"すべて表示"</string>
+    <string msgid="2031811694353399454" name="abc_activitychooserview_choose_application">"アプリの選択"</string>
+    <string msgid="121134116657445385" name="abc_capital_off">"OFF"</string>
+    <string msgid="3405795526292276155" name="abc_capital_on">"ON"</string>
+    <string msgid="7723749260725869598" name="abc_search_hint">"検索…"</string>
+    <string msgid="3691816814315814921" name="abc_searchview_description_clear">"検索キーワードを削除"</string>
+    <string msgid="2550479030709304392" name="abc_searchview_description_query">"検索キーワード"</string>
+    <string msgid="8264924765203268293" name="abc_searchview_description_search">"検索"</string>
+    <string msgid="8928215447528550784" name="abc_searchview_description_submit">"検索キーワードを送信"</string>
+    <string msgid="893419373245838918" name="abc_searchview_description_voice">"音声検索"</string>
+    <string msgid="3421042268587513524" name="abc_shareactionprovider_share_with">"共有"</string>
+    <string msgid="3300176832234831527" name="abc_shareactionprovider_share_with_application">"<ns1:g id="APPLICATION_NAME">%s</ns1:g>と共有"</string>
+    <string msgid="1603543279005712093" name="abc_toolbar_collapse_description">"折りたたむ"</string>
+    <string name="flight_forbid_warn_alert_txt">GEO：(%s) 警告区域にいます。注意して飛行してください。</string>
+    <string name="flight_forbid_warn_edge_alert_txt">GEO：(%s) 警告区域にいます。注意して飛行してください。</string>
+    <string name="flight_frb_new_around_frb">制限区域に近づいています。\n制限区域の種別：%s\n機体は、RTHの飛行を中断／その場でホバリング／インテリジェント・フライトモードをキャンセルする場合があります。慎重に飛行してください。</string>
+    <string name="flight_frb_new_around_limit">GEO区域に近づいています。RTHの飛行を中断／その場でホバリング／インテリジェント・フライトモードをキャンセルする場合があります。慎重に飛行してください。</string>
+    <string name="flight_frb_new_below_limit_height">機体が高度制限区域 (%d m)を飛行。慎重に飛行してください。</string>
+    <string name="flight_frb_new_enhance_warning">機体が強化警告区域（%s）を飛行中。慎重に飛行してください。\n飛行を続けるには、以下を選択してください:</string>
+    <string name="flight_frb_new_limit_height_lose_gps">GPS信号がロスト。高度は %d mに制限。</string>
+    <string name="flight_frb_new_seem_in_auth_no_license">離陸できません。機体は飛行承認区域に入っており、GPS信号が微弱です。\n承認区域の種別：%s\nこの区域にアクセスするため、自己制限解除を申請しますか？</string>
+    <string name="flight_frb_new_touch_to_open_license">機体が侵入を許可されている飛行承認区域の境界線付近を飛行。\n飛行承認区域の種別：%s\n飛行を続けるには、以下を選択してください:</string>
+    <string name="flight_record_sync_del_result">削除失敗数：%d</string>
+    <string name="flight_record_sync_download_result">ダウンロード失敗数：%d</string>
+    <string name="flight_record_sync_fail">同期に失敗しました!</string>
+    <string name="flight_record_sync_upload_result">アップロード失敗数：%d</string>
+    <string name="limit_tips_touch">機体が制限区域の境界線付近を飛行中。慎重に飛行して遠ざかってください。</string>
+    <string name="limit_tips_touch_auth">機体が飛行承認区域の境界線付近を飛行。慎重に飛行して遠ざかってください。</string>
+    <string name="limit_tips_touch_limit_height">機体は高度制限区域の境界線付近を飛行中。慎重に遠ざかるか着陸してください。</string>
+    <string name="nfz_fly_zone_airport">空港</string>
+    <string name="nfz_fly_zone_airports_commercial">商用空港</string>
+    <string name="nfz_fly_zone_airports_commercial_private">商用空港</string>
+    <string name="nfz_fly_zone_airports_recreational">レクリエーション飛行用空港</string>
+    <string name="nfz_fly_zone_airports_recreational_private">プライベート飛行用空港</string>
+    <string name="nfz_fly_zone_class_b">クラスB空域</string>
+    <string name="nfz_fly_zone_class_c">クラスC空域</string>
+    <string name="nfz_fly_zone_class_d">クラスD空域</string>
+    <string name="nfz_fly_zone_class_e0">クラスE空域</string>
+    <string name="nfz_fly_zone_heliports">ヘリポート</string>
+    <string name="nfz_fly_zone_military">軍用</string>
+    <string name="nfz_fly_zone_national_parks">国立公園</string>
+    <string name="nfz_fly_zone_noaa">NOAAエリア</string>
+    <string name="nfz_fly_zone_nuclear_power_plant">原子力発電所</string>
+    <string name="nfz_fly_zone_parcels">小包</string>
+    <string name="nfz_fly_zone_power_plants">発電所</string>
+    <string name="nfz_fly_zone_prisons">刑務所</string>
+    <string name="nfz_fly_zone_schools">学校</string>
+    <string name="nfz_fly_zone_stadiums">競技場</string>
+    <string name="nfz_fly_zone_sua_prhobited">禁止空域</string>
+    <string name="nfz_fly_zone_sua_restricted">制限空域</string>
+    <string name="nfz_fly_zone_tfrs">一時的飛行制限</string>
+    <string name="nfz_fly_zone_unpaved_airports">未舗装空港</string>
+    <string name="nfz_server_error_account_format">アカウントのフォーマットが間違っています。</string>
+    <string name="nfz_server_error_format">入力フォーマットが間違っています。</string>
+    <string name="nfz_server_error_not_allow_unlimit">この区域ではロック解除できません。</string>
+    <string name="nfz_server_error_parameter">パラメータを入力してください。</string>
+    <string name="nfz_server_error_signature">署名が間違っています。</string>
+    <string name="nfz_server_error_sn_empty">シリアルナンバーが間違っています。</string>
+    <string name="nfz_server_error_system_busy">システムエラー</string>
+    <string name="nfz_server_error_too_frequent">10秒後にやり直してください。</string>
+    <string name="nfz_server_error_too_more_unlimit">ロック解除制限に到達しました。不必要な区域を削除してさらにロックを解除してください。</string>
+    <string name="nfz_server_error_user_not_verify">ユーザーは認証されていません。</string>
+    <string name="nfz_unlimit_fail_toast_txt">ロック解除に失敗しました。エラーコード：</string>
+    <string msgid="146198913615257606" name="search_menu_title">"検索"</string>
+    <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">"999+"</string>
+</resources>

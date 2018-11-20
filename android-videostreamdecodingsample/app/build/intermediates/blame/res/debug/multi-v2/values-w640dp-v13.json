@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/zlinoliver/Documents/DJI-SDK-Github/Android-Tutorial-Projects/Android-VideoStreamDecodingSample/android-videostreamdecodingsample/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-w640dp-v13/values-w640dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/zlinoliver/.gradle/caches/transforms-1/files-1.1/dji-sdk-4.8.1.aar/7617b11bf10383b978ae2fdc6343832e/res/values-w640dp-v13/values-w640dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,120,182,243,305",
+                        "endColumns": "64,61,60,61,57",
+                        "endOffsets": "115,177,238,300,358"
+                    }
+                }
+            ]
+        }
+    ]
+}
