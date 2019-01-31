@@ -722,8 +722,8 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             }
         }
         if (inputFrame.width!=0 && inputFrame.height != 0 &&
-                inputFrame.width != this.width &&
-                inputFrame.height != this.height) {
+            (inputFrame.width != this.width ||
+                inputFrame.height != this.height)) {
             this.width = inputFrame.width;
             this.height = inputFrame.height;
     	   /*

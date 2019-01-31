@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="offline_map_header_bar_title_size">14sp</dimen>
-    <dimen name="offline_map_manager_title_size">12sp</dimen>
-    <dimen name="offline_map_search_bar_width">750dp</dimen>
-    <dimen name="offline_map_search_edit_width">630dp</dimen>
-    <dimen name="offline_map_search_x_margin">5dp</dimen>
-</resources>

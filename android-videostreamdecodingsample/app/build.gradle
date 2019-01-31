@@ -49,13 +49,16 @@ android {
     }
 }
 dependencies {
-    implementation 'com.android.support:multidex:1.0.1'
-    implementation('com.dji:dji-sdk:4.8.1', {
+    implementation 'com.android.support:multidex:1.0.2'
+    implementation('com.dji:dji-sdk:4.9', {
         //if your app needn't support Mavic 2 Pro and Mavic 2 Zoom, pls exclude the library-anti-distortion module
         //like following
         //exclude module: 'library-anti-distortion'
     })
-    compileOnly 'com.dji:dji-sdk-provided:4.8.1'
-
+    compileOnly 'com.dji:dji-sdk-provided:4.9'
 }
 
+
+repositories {
+    google()
+}
