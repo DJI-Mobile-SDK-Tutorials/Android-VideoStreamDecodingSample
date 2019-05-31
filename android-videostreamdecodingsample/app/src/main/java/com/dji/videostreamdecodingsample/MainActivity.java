@@ -5,6 +5,7 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.YuvImage;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,25 +21,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dji.videostreamdecodingsample.media.DJIVideoStreamDecoder;
-
 import com.dji.videostreamdecodingsample.media.NativeHelper;
-import dji.common.camera.SettingsDefinitions;
-import dji.common.error.DJIError;
-import dji.common.util.CommonCallbacks;
-import dji.log.DJILog;
-import dji.thirdparty.afinal.core.AsyncTask;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
+import dji.common.camera.SettingsDefinitions;
+import dji.common.error.DJIError;
 import dji.common.product.Model;
+import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.Camera;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
-import java.nio.ByteBuffer;
+import dji.thirdparty.afinal.core.AsyncTask;
 
 public class MainActivity extends Activity implements DJICodecManager.YuvDataCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -391,13 +391,18 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    saveYuvDataToJPEG(bytes, width, height);
+                    if (Build.VERSION.SDK_INT <= 23){
+                        oldSaveYuvDataToJPEG(bytes, width, height);
+                    }else {
+                        newSaveYuvDataToJPEG(bytes, width, height);
+                    }
                 }
             });
         }
     }
 
-    private void saveYuvDataToJPEG(byte[] yuvFrame, int width, int height){
+    // For android API <= 23
+    private void oldSaveYuvDataToJPEG(byte[] yuvFrame, int width, int height){
         if (yuvFrame.length < width * height) {
             //DJILog.d(TAG, "yuvFrame size is too small " + yuvFrame.length);
             return;
@@ -445,6 +450,26 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                   + ",array length: "
                   + bytes.length);
         screenShot(bytes,Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+    }
+
+    private void newSaveYuvDataToJPEG(byte[] yuvFrame, int width, int height){
+        if (yuvFrame.length < width * height) {
+            //DJILog.d(TAG, "yuvFrame size is too small " + yuvFrame.length);
+            return;
+        }
+        int length = width * height;
+
+        byte[] u = new byte[width * height / 4];
+        byte[] v = new byte[width * height / 4];
+        for (int i = 0; i < u.length; i++) {
+            v[i] = yuvFrame[length + 2 * i];
+            u[i] = yuvFrame[length + 2 * i + 1];
+        }
+        for (int i = 0; i < u.length; i++) {
+            yuvFrame[length + 2 * i] = u[i];
+            yuvFrame[length + 2 * i + 1] = v[i];
+        }
+        screenShot(yuvFrame,Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
     }
 
     /**

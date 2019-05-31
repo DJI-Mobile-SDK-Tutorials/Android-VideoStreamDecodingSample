@@ -45,20 +45,25 @@ android {
         doNotStrip "*/*/libFRCorkscrew.so"
         doNotStrip "*/*/libUpgradeVerify.so"
         doNotStrip "*/*/libFR.so"
+        doNotStrip "*/*/libDJIFlySafeCore.so"
+        doNotStrip "*/*/libdjifs_jni.so"
+        doNotStrip "*/*/libsfjni.so"
         exclude 'META-INF/rxjava.properties'
     }
 }
 dependencies {
     implementation 'com.android.support:multidex:1.0.2'
-    implementation('com.dji:dji-sdk:4.9', {
+    implementation('com.dji:dji-sdk:4.10', {
         //if your app needn't support Mavic 2 Pro and Mavic 2 Zoom, pls exclude the library-anti-distortion module
         //like following
         //exclude module: 'library-anti-distortion'
+
+        //Uncomment the following line if your APP does not need network RTK.
+        //For Phantom 4 RTK and Matrice 210 RTK V2. Network RTK can be used as a virtual reference station to provide
+        //cm level accurate position.
+        //exclude module: 'library-anti-distortion'
     })
-    compileOnly 'com.dji:dji-sdk-provided:4.9'
+    compileOnly 'com.dji:dji-sdk-provided:4.10'
+
 }
 
-
-repositories {
-    google()
-}

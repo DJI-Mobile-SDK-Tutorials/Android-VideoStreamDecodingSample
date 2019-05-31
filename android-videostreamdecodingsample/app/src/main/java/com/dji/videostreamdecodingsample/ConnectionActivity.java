@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import dji.sdk.sdkmanager.DJISDKInitEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -153,6 +154,11 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                             }
                             notifyStatusChange();
                         }
+
+                        @Override
+                        public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
+                            //notify the init progress
+                        }
                     });
                 }
             });
@@ -245,6 +251,7 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
         mBtnOpen.setOnClickListener(this);
         mBtnOpen.setEnabled(false);
         ((TextView)findViewById(R.id.textView2)).setText(getResources().getString(R.string.sdk_version, DJISDKManager.getInstance().getSDKVersion()));
+
     }
 
     private void updateTitleBar() {
