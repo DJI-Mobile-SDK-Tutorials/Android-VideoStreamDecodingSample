@@ -61,7 +61,7 @@ dependencies {
         //Uncomment the following line if your APP does not need network RTK.
         //For Phantom 4 RTK and Matrice 210 RTK V2. Network RTK can be used as a virtual reference station to provide
         //cm level accurate position.
-        //exclude module: 'library-anti-distortion'
+        //exclude module: 'library-networkrtk-helper'
     })
     compileOnly 'com.dji:dji-sdk-provided:4.10'
 
