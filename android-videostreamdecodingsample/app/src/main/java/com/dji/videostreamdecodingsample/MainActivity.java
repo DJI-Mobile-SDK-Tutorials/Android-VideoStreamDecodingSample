@@ -5,6 +5,8 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.YuvImage;
+import android.media.MediaCodecInfo;
+import android.media.MediaFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -259,16 +261,17 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                     }
                 });
 
-                if (demoType == DemoType.USE_SURFACE_VIEW_DEMO_DECODER) {
-                    if (VideoFeeder.getInstance() != null) {
-                        standardVideoFeeder = VideoFeeder.getInstance().provideTranscodedVideoFeed();
-                        standardVideoFeeder.addVideoDataListener(mReceivedVideoDataListener);
-                    }
-                } else {
-                    if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
-                        VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(mReceivedVideoDataListener);
-                    }
+                //When calibration is needed or the fetch key frame is required by SDK, should use the provideTranscodedVideoFeed
+                //to receive the transcoded video feed from main camera.
+                if (demoType == DemoType.USE_SURFACE_VIEW_DEMO_DECODER && isTranscodedVideoFeedNeeded()) {
+                    standardVideoFeeder = VideoFeeder.getInstance().provideTranscodedVideoFeed();
+                    standardVideoFeeder.addVideoDataListener(mReceivedVideoDataListener);
+                    return;
                 }
+                if (VideoFeeder.getInstance().getPrimaryVideoFeed() != null) {
+                    VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(mReceivedVideoDataListener);
+                }
+
             }
         }
     }
@@ -381,7 +384,7 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
 
 
     @Override
-    public void onYuvDataReceived(final ByteBuffer yuvFrame, int dataSize, final int width, final int height) {
+    public void onYuvDataReceived(MediaFormat format, final ByteBuffer yuvFrame, int dataSize, final int width, final int height) {
         //In this demo, we test the YUV data by saving it into JPG files.
         //DJILog.d(TAG, "onYuvDataReceived " + dataSize);
         if (count++ % 30 == 0 && yuvFrame != null) {
@@ -391,11 +394,25 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (Build.VERSION.SDK_INT <= 23){
-                        oldSaveYuvDataToJPEG(bytes, width, height);
-                    }else {
-                        newSaveYuvDataToJPEG(bytes, width, height);
+                    // two samples here, it may has other color format.
+                    int colorFormat = format.getInteger(MediaFormat.KEY_COLOR_FORMAT);
+                    switch (colorFormat) {
+                        case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar:
+                            //NV12
+                            if (Build.VERSION.SDK_INT <= 23) {
+                                oldSaveYuvDataToJPEG(bytes, width, height);
+                            } else {
+                                newSaveYuvDataToJPEG(bytes, width, height);
+                            }
+                            break;
+                        case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar:
+                            //YUV420P
+                            newSaveYuvDataToJPEG420P(bytes, width, height);
+                            break;
+                        default:
+                            break;
                     }
+
                 }
             });
         }
@@ -449,7 +466,7 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                   + DJIVideoStreamDecoder.getInstance().frameIndex
                   + ",array length: "
                   + bytes.length);
-        screenShot(bytes,Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        screenShot(bytes, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
     }
 
     private void newSaveYuvDataToJPEG(byte[] yuvFrame, int width, int height){
@@ -470,6 +487,26 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             yuvFrame[length + 2 * i + 1] = v[i];
         }
         screenShot(yuvFrame,Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+    }
+
+    private void newSaveYuvDataToJPEG420P(byte[] yuvFrame, int width, int height) {
+        if (yuvFrame.length < width * height) {
+            return;
+        }
+        int length = width * height;
+
+        byte[] u = new byte[width * height / 4];
+        byte[] v = new byte[width * height / 4];
+
+        for (int i = 0; i < u.length; i ++) {
+            u[i] = yuvFrame[length + i];
+            v[i] = yuvFrame[length + u.length + i];
+        }
+        for (int i = 0; i < u.length; i++) {
+            yuvFrame[length + 2 * i] = v[i];
+            yuvFrame[length + 2 * i + 1] = u[i];
+        }
+        screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
     }
 
     /**
@@ -592,5 +629,14 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
         path = path + "\n";
         stringBuilder.append(path);
         savePath.setText(stringBuilder.toString());
+    }
+
+    private boolean isTranscodedVideoFeedNeeded() {
+        if (VideoFeeder.getInstance() == null) {
+            return false;
+        }
+
+        return VideoFeeder.getInstance().isFetchKeyFrameNeeded() || VideoFeeder.getInstance()
+                                                                               .isLensDistortionCalibrationNeeded();
     }
 }

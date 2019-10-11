@@ -34,6 +34,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
         <meta-data
             android:name="com.dji.sdk.API_KEY"
             android:value="Please enter your App Key here."/>

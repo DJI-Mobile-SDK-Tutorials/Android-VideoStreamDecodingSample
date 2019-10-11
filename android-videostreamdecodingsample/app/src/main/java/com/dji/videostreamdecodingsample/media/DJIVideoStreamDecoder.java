@@ -754,6 +754,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void decodeFrame() throws Exception {
         DJIFrame inputFrame = frameQueue.poll();
+        MediaFormat format = MediaFormat.createVideoFormat(VIDEO_ENCODING_FORMAT, width, height);
         if (inputFrame == null) {
             return;
         }
@@ -788,7 +789,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                     yuvDataBuf.position(bufferInfo.offset);
                     yuvDataBuf.limit(bufferInfo.size - bufferInfo.offset);
                     if (yuvDataListener != null) {
-                        yuvDataListener.onYuvDataReceived(yuvDataBuf, bufferInfo.size - bufferInfo.offset,  width, height);
+                        yuvDataListener.onYuvDataReceived(format, yuvDataBuf, bufferInfo.size - bufferInfo.offset,  width, height);
                     }
                 }
                 // All the output buffer must be release no matter whether the yuv data is output or
