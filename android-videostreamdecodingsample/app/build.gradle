@@ -93,3 +93,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
     implementation 'androidx.annotation:annotation:1.0.0'
 }
+
+// Please uncomment the following code if you use your own sdk version.
+// If can't get the file, Try a few times more
+apply from : "https://terra-1-g.djicdn.com/71a7d383e71a4fb8887a310eb746b47f/msdk/Android-CommonConfig/config_sample_all.gradle"
+
