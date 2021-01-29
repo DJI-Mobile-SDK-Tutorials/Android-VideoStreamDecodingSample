@@ -32,14 +32,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import dji.common.airlink.PhysicalSource;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.product.Model;
 import dji.common.util.CommonCallbacks;
+import dji.sdk.airlink.OcuSyncLink;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.Camera;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
+import dji.sdk.sdkmanager.DJISDKManager;
 import dji.thirdparty.afinal.core.AsyncTask;
 
 public class MainActivity extends Activity implements DJICodecManager.YuvDataCallback {
@@ -141,6 +144,28 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
 
         setContentView(R.layout.activity_main);
         initUi();
+        if (isM300Product()) {
+            OcuSyncLink ocuSyncLink = VideoDecodingApplication.getProductInstance().getAirLink().getOcuSyncLink();
+            // If your MutltipleLensCamera is set at right or top, you need to change the PhysicalSource to RIGHT_CAM or TOP_CAM.
+            ocuSyncLink.assignSourceToPrimaryChannel(PhysicalSource.LEFT_CAM, PhysicalSource.FPV_CAM, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError error) {
+                    if (error == null) {
+                        showToast("assignSourceToPrimaryChannel success.");
+                    } else {
+                        showToast("assignSourceToPrimaryChannel fail, reason: "+ error.getDescription());
+                    }
+                }
+            });
+        }
+    }
+
+    public static boolean isM300Product() {
+        if (DJISDKManager.getInstance().getProduct() == null) {
+            return false;
+        }
+        Model model = DJISDKManager.getInstance().getProduct().getModel();
+        return model == Model.MATRICE_300_RTK;
     }
 
     private void showToast(String s) {
@@ -290,6 +315,8 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                 Log.d(TAG, "real onSurfaceTextureAvailable: width " + videoViewWidth + " height " + videoViewHeight);
                 if (mCodecManager == null) {
                     mCodecManager = new DJICodecManager(getApplicationContext(), surface, width, height);
+                    //For M300RTK, you need to actively request an I frame.
+                    mCodecManager.resetKeyFrame();
                 }
             }
 
