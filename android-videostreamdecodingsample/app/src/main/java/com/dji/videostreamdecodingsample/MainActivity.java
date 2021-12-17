@@ -277,14 +277,27 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
         } else {
             if (!product.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
                 mCamera = product.getCamera();
-                mCamera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        if (djiError != null) {
-                            showToast("can't change mode of camera, error:"+djiError.getDescription());
-                        }
+                if (mCamera != null) {
+                    if (mCamera.isFlatCameraModeSupported()) {
+                        mCamera.setFlatMode(SettingsDefinitions.FlatCameraMode.PHOTO_SINGLE, new CommonCallbacks.CompletionCallback() {
+                            @Override
+                            public void onResult(DJIError djiError) {
+                                if(djiError!=null){
+                                    showToast("can't change flat mode of camera, error:" + djiError.getDescription());
+                                }
+                            }
+                        });
+                    } else {
+                        mCamera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, new CommonCallbacks.CompletionCallback() {
+                            @Override
+                            public void onResult(DJIError djiError) {
+                                if (djiError != null) {
+                                    showToast("can't change mode of camera, error:" + djiError.getDescription());
+                                }
+                            }
+                        });
                     }
-                });
+                }
 
                 //When calibration is needed or the fetch key frame is required by SDK, should use the provideTranscodedVideoFeed
                 //to receive the transcoded video feed from main camera.
@@ -493,7 +506,11 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                   + DJIVideoStreamDecoder.getInstance().frameIndex
                   + ",array length: "
                   + bytes.length);
-        screenShot(bytes, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            screenShot(bytes, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+        } else {
+            screenShot(bytes, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        }
     }
 
     private void newSaveYuvDataToJPEG(byte[] yuvFrame, int width, int height){
@@ -513,7 +530,12 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             yuvFrame[length + 2 * i] = u[i];
             yuvFrame[length + 2 * i + 1] = v[i];
         }
-        screenShot(yuvFrame,Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            screenShot(yuvFrame, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+        } else {
+            screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        }
     }
 
     private void newSaveYuvDataToJPEG420P(byte[] yuvFrame, int width, int height) {
@@ -533,7 +555,12 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             yuvFrame[length + 2 * i] = v[i];
             yuvFrame[length + 2 * i + 1] = u[i];
         }
-        screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            screenShot(yuvFrame, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+        } else {
+            screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        }
     }
 
     /**
