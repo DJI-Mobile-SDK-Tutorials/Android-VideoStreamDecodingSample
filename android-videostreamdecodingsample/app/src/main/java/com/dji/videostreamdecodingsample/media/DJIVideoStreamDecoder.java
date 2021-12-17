@@ -13,12 +13,7 @@ import android.util.Log;
 import android.view.Surface;
 
 import com.dji.videostreamdecodingsample.R;
-import dji.common.product.Model;
-import dji.log.DJILog;
-import dji.midware.data.model.P3.DataCameraGetPushStateInfo;
-import dji.sdk.codec.DJICodecManager;
-import dji.sdk.products.Aircraft;
-import dji.sdk.sdkmanager.DJISDKManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -26,7 +21,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import dji.common.product.Model;
+import dji.log.DJILog;
+import dji.midware.data.model.P3.DataCameraGetPushStateInfo;
 import dji.sdk.base.BaseProduct;
+import dji.sdk.codec.DJICodecManager;
+import dji.sdk.products.Aircraft;
+import dji.sdk.sdkmanager.DJISDKManager;
 
 /**
  * This class is a helper class for hardware decoding. Please follow the following steps to use it:
@@ -474,6 +475,16 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                 iframeId = -1;
             }
                 break;
+
+            case MAVIC_AIR_2:
+                break;
+            case MAVIC_2_ENTERPRISE:
+            case MAVIC_2_ENTERPRISE_DUAL:
+                iframeId = dji.midware.R.raw.iframe_1280x720_wm220;
+                break;
+            case MAVIC_2_ENTERPRISE_ADVANCED:
+                break;
+
             default: //for P3P, Inspire1, etc/
                 iframeId = R.raw.iframe_1280x720_ins;
                 break;
