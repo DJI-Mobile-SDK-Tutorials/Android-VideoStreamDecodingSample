@@ -485,6 +485,24 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
             case MAVIC_2_ENTERPRISE_ADVANCED:
                 break;
 
+            case MAVIC_MINI:
+            case DJI_MINI_SE:
+            case DJI_MINI_2:
+                switch (width) {
+                    case 1280:
+                        iframeId = dji.midware.R.raw.iframe_1280x720_wm160;
+                        DJILog.i(TAG, "Selected Iframe=iframe_1280x720_wm160");
+                        break;
+                    case 960:
+                        iframeId = dji.midware.R.raw.iframe_960x720_wm160;
+                        DJILog.i(TAG, "Selected Iframe=iframe_960x720_wm160");
+                        break;
+                }
+                if (iframeId == -1 && height == 1080) {
+                    iframeId = dji.midware.R.raw.dji1080gdriframe;
+                    DJILog.i(TAG, "Selected Iframe=iframe_1080p_wm160");
+                }
+
             default: //for P3P, Inspire1, etc/
                 iframeId = R.raw.iframe_1280x720_ins;
                 break;

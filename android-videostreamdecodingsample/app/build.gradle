@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.dji.videostreamdecodingsample"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         multiDexEnabled true
         ndk {
@@ -80,7 +80,7 @@ android {
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'com.squareup:otto:1.3.8'
-    implementation('com.dji:dji-sdk:4.15.1', {
+    implementation('com.dji:dji-sdk:4.16.2', {
         /**
          * Uncomment the "library-anti-distortion" if your app does not need Anti Distortion for Mavic 2 Pro and Mavic 2 Zoom.
          * Uncomment the "fly-safe-database" if you need database for release, or we will download it when DJISDKManager.getInstance().registerApp
@@ -90,7 +90,7 @@ dependencies {
         exclude module: 'library-anti-distortion'
         //exclude module: 'fly-safe-database'
     })
-    compileOnly 'com.dji:dji-sdk-provided:4.15.1'
+    compileOnly 'com.dji:dji-sdk-provided:4.16.2'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.core:core:1.3.2'
