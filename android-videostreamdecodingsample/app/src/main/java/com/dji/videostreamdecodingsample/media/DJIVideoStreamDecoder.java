@@ -502,6 +502,7 @@ public class DJIVideoStreamDecoder implements NativeHelper.NativeDataListener {
                     iframeId = dji.midware.R.raw.dji1080gdriframe;
                     DJILog.i(TAG, "Selected Iframe=iframe_1080p_wm160");
                 }
+                break;
 
             default: //for P3P, Inspire1, etc/
                 iframeId = R.raw.iframe_1280x720_ins;
