@@ -32,14 +32,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import dji.common.airlink.PhysicalSource;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.product.Model;
 import dji.common.util.CommonCallbacks;
+import dji.sdk.airlink.OcuSyncLink;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.Camera;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
+import dji.sdk.sdkmanager.DJISDKManager;
 import dji.thirdparty.afinal.core.AsyncTask;
 
 public class MainActivity extends Activity implements DJICodecManager.YuvDataCallback {
@@ -141,6 +144,28 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
 
         setContentView(R.layout.activity_main);
         initUi();
+        if (isM300Product()) {
+            OcuSyncLink ocuSyncLink = VideoDecodingApplication.getProductInstance().getAirLink().getOcuSyncLink();
+            // If your MutltipleLensCamera is set at right or top, you need to change the PhysicalSource to RIGHT_CAM or TOP_CAM.
+            ocuSyncLink.assignSourceToPrimaryChannel(PhysicalSource.LEFT_CAM, PhysicalSource.FPV_CAM, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError error) {
+                    if (error == null) {
+                        showToast("assignSourceToPrimaryChannel success.");
+                    } else {
+                        showToast("assignSourceToPrimaryChannel fail, reason: "+ error.getDescription());
+                    }
+                }
+            });
+        }
+    }
+
+    public static boolean isM300Product() {
+        if (DJISDKManager.getInstance().getProduct() == null) {
+            return false;
+        }
+        Model model = DJISDKManager.getInstance().getProduct().getModel();
+        return model == Model.MATRICE_300_RTK;
     }
 
     private void showToast(String s) {
@@ -252,14 +277,27 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
         } else {
             if (!product.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
                 mCamera = product.getCamera();
-                mCamera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        if (djiError != null) {
-                            showToast("can't change mode of camera, error:"+djiError.getDescription());
-                        }
+                if (mCamera != null) {
+                    if (mCamera.isFlatCameraModeSupported()) {
+                        mCamera.setFlatMode(SettingsDefinitions.FlatCameraMode.PHOTO_SINGLE, new CommonCallbacks.CompletionCallback() {
+                            @Override
+                            public void onResult(DJIError djiError) {
+                                if(djiError!=null){
+                                    showToast("can't change flat mode of camera, error:" + djiError.getDescription());
+                                }
+                            }
+                        });
+                    } else {
+                        mCamera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, new CommonCallbacks.CompletionCallback() {
+                            @Override
+                            public void onResult(DJIError djiError) {
+                                if (djiError != null) {
+                                    showToast("can't change mode of camera, error:" + djiError.getDescription());
+                                }
+                            }
+                        });
                     }
-                });
+                }
 
                 //When calibration is needed or the fetch key frame is required by SDK, should use the provideTranscodedVideoFeed
                 //to receive the transcoded video feed from main camera.
@@ -290,6 +328,8 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                 Log.d(TAG, "real onSurfaceTextureAvailable: width " + videoViewWidth + " height " + videoViewHeight);
                 if (mCodecManager == null) {
                     mCodecManager = new DJICodecManager(getApplicationContext(), surface, width, height);
+                    //For M300RTK, you need to actively request an I frame.
+                    mCodecManager.resetKeyFrame();
                 }
             }
 
@@ -466,7 +506,11 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                   + DJIVideoStreamDecoder.getInstance().frameIndex
                   + ",array length: "
                   + bytes.length);
-        screenShot(bytes, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            screenShot(bytes, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+        } else {
+            screenShot(bytes, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        }
     }
 
     private void newSaveYuvDataToJPEG(byte[] yuvFrame, int width, int height){
@@ -486,7 +530,12 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             yuvFrame[length + 2 * i] = u[i];
             yuvFrame[length + 2 * i + 1] = v[i];
         }
-        screenShot(yuvFrame,Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            screenShot(yuvFrame, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+        } else {
+            screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        }
     }
 
     private void newSaveYuvDataToJPEG420P(byte[] yuvFrame, int width, int height) {
@@ -506,7 +555,12 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             yuvFrame[length + 2 * i] = v[i];
             yuvFrame[length + 2 * i + 1] = u[i];
         }
-        screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            screenShot(yuvFrame, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+        } else {
+            screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+        }
     }
 
     /**

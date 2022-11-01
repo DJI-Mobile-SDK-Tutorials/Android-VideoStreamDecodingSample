@@ -137,6 +137,15 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                                 VideoDecodingApplication.updateProduct(baseProduct);
                             }
                         }
+
+                        @Override
+                        public void onProductChanged(BaseProduct baseProduct) {
+                            notifyStatusChange();
+                            if (baseProduct != null) {
+                                VideoDecodingApplication.updateProduct(baseProduct);
+                            }
+                        }
+
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey,
                                                       BaseComponent oldComponent,

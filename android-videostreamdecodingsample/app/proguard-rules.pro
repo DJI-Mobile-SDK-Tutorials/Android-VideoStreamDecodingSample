@@ -112,3 +112,4 @@
 -keepclassmembers class android.arch.** { *; }
 -keep class android.arch.** { *; }
 -dontwarn android.arch.**
+-ignorewarnings
