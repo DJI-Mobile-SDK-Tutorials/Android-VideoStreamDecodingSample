@@ -23,12 +23,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            shrinkResources true
-            minifyEnabled true
+            shrinkResources false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -91,6 +92,7 @@ dependencies {
         //exclude module: 'fly-safe-database'
     })
     compileOnly 'com.dji:dji-sdk-provided:4.15.1'
+
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.core:core:1.3.2'
